@@ -20,12 +20,16 @@
 %US2 -> BS1 -> US1
 
 % create
-nFrames = 1 % number of frames that will be sent to caculate the FER of the network
+% Import the objects
+import FrameObj
+clear all
+close all
+nFrames = 1; % number of frames that will be sent to caculate the FER of the network
 errors =0;
 message = 'test';
 sendersIDS = [FrameObj.IDUE1 FrameObj.IDUE3 FrameObj.IDUE2 FrameObj.IDUE3 FrameObj.IDUE1 FrameObj.IDUE2];
 receiversIDS = [FrameObj.IDUE3 FrameObj.IDUE1 FrameObj.IDUE3 FrameObj.IDUE2 FrameObj.IDUE2 FrameObj.IDUE1];
-nTest = lenght(sendersIDS);
+nTest = length(sendersIDS);
 FER = zeros(nTest,1);
 
 % the sedn ID and receiver ID will be defined with other teams
