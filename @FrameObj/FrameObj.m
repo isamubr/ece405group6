@@ -86,13 +86,13 @@ classdef FrameObj
         
         %data actually refers to the data and the CRC8 number ??
         function obj = set.data(obj,inputdata)
-            WORD_BINARY = reshape(dec2bin(inputdata,7)',1,[]);
+            temp_bin = reshape(dec2bin(inputdata,8)',1,[]);
             % note the <'> after the dec2bin, to transpose the matrix
-            for j=1:size(WORD_BINARY,2)
-                WORD_OUTPUT(1,j) = str2num(WORD_BINARY(1,j));
+            for j=1:size(temp_bin,2)
+                temp_data(1,j) = str2num(temp_bin(1,j));
             end
             crcGen = comm.CRCGenerator([8 7 6 4 2 0]);
-            obj.data =  step(crcGen, WORD_OUTPUT');
+            obj.data =  step(crcGen, temp_data');
         end
         
         function value = get.dataSize(obj)
@@ -113,13 +113,13 @@ classdef FrameObj
                 type_array(1,j) = str2num(type(1,j));
             end
             
-            sendid = reshape(dec2bin(obj.sendID,8)',1,[]);
+            sendid = reshape(dec2bin(obj.sndID,8)',1,[]);
             for j=1:size(sendid,2)
-                sendid_array(1,j) = str2num(type(1,j));
+                sendid_array(1,j) = str2num(sendid(1,j));
             end
             
   
-            value = [type_array; sendidarray; obj.data];
+            value = [type_array sendid_array  obj.data'];
         end
     end
 end
