@@ -1,5 +1,5 @@
 %
-%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 %Main script Course Design Project of ECE4305: Software-Defined Radio Systems and Analysis
 %
 %   Team 6
