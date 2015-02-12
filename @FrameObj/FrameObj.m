@@ -134,7 +134,7 @@ classdef FrameObj
                 sendid_array(1,j) = str2num(sendid(1,j));
             end
       
-            %%%%If we need a next hop
+            %%%%If we need a next hop 
             %nhid =  = reshape(dec2bin(obj.nexthopID,8)',1,[]);
             %for j=1:size(nhid,2)
                 %nhid_array(1,j) = str2num(nhid(1,j));
