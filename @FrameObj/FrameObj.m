@@ -31,10 +31,10 @@ classdef FrameObj
     end
     properties
         frameType %When sending messages we will use at least two types of frames, the Data frame, and ACK frame
-        rcvID %The identification number of the receiver
+        rcvID %The identification number of the destination receiver
+        %nexthopID %The identification number of the next reception hop %%%may or may not be necessary
         sndID %The identification number of the sender.
         sn %The sequence number is optional if it is necessary to deal with the situation when ACK is corrupt or lost.
-        
         data  %data field
         
     end
@@ -44,6 +44,7 @@ classdef FrameObj
         frameSerial %why is this not working?
     end
     methods
+        %function obj = FrameObj(inputframeType,inputrcvID,inputnexthopID,inputsndID,inputData)
         function obj = FrameObj(inputframeType,inputrcvID,inputsndID,inputData)
             
             %create a sequence number from 0 to 255
@@ -54,6 +55,8 @@ classdef FrameObj
                 obj.frameType = inputframeType;
                 %receiver verfication
                 obj.rcvID = inputrcvID;
+                %ADD if we need next hop
+                %obj.nexthopID = inputnexthopID;
                 %sender verfication
                 obj.sndID = inputsndID;
                 obj.data = inputData;
@@ -61,6 +64,8 @@ classdef FrameObj
                 obj.frameType = 1;
                 %receiver verfication
                 obj.rcvID = 0101;
+                %ADD if we need next hop &come up number
+                %obj.nexthopID = ????;
                 %sender verfication
                 obj.sndID = 0102;
                 obj.data = 'hello';
@@ -76,9 +81,15 @@ classdef FrameObj
                     error('Not a supported frame type')
             end
         end
+        
         function obj = set.rcvID(obj,inputrcvID)
             obj.rcvID = uint8(inputrcvID);
         end
+        
+        %IF we need next hop
+%         function obj = set.nexthopID(obj,inputnexthopID)
+%             obj.nexthopID = uint8(inputnexthopID);
+%         end
         
         function obj = set.sndID(obj,inputsndID)
             obj.sndID = uint8(inputsndID);
@@ -108,18 +119,30 @@ classdef FrameObj
         end
         
         function value = get.frameSerial(obj)
-            type = reshape(dec2bin(obj.frameType,8)',1,[])
+            type = reshape(dec2bin(obj.frameType,8)',1,[]);
             for j=1:size(type,2)
                 type_array(1,j) = str2num(type(1,j));
+            end
+            
+            rcvid = reshape(dec2bin(obj.rcvID,8)',1,[]);
+            for j=1:size(recid,2)
+                rcvid_array(1,j) = str2num(recid(1,j));
             end
             
             sendid = reshape(dec2bin(obj.sndID,8)',1,[]);
             for j=1:size(sendid,2)
                 sendid_array(1,j) = str2num(sendid(1,j));
             end
+      
+            %%%%If we need a next hop
+            %nhid =  = reshape(dec2bin(obj.nexthopID,8)',1,[]);
+            %for j=1:size(nhid,2)
+                %nhid_array(1,j) = str2num(nhid(1,j));
+            %end
             
-  
-            value = [type_array sendid_array  obj.data'];
+            % value = [type_array rcvid_array nhid_array sendid_array obj.data'];
+            
+            value = [type_array rcvid_array sendid_array obj.data'];
         end
     end
 end
