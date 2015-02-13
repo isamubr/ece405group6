@@ -36,7 +36,7 @@ FER = zeros(nTest,1);
 % the sedn ID and receiver ID will be defined with other teams
 for indexTest = 1:1
     tempString =   strcat(num2str(sendersIDS), '_', num2str(receiversIDS), '_Hello');
-    frame = FrameObj(FrameObj.DATAFRAME,receiversIDS(indexTest),sendersIDS(indexTest),tempString);
+    frame = FrameObj(FrameObj.DATAFRAME,receiversIDS(indexTest),sendersIDS(indexTest),sendersIDS(indexTest),tempString);
     
     frameText = FrameObj(frame.frameArray);
     

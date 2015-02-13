@@ -35,7 +35,7 @@ classdef FrameObj
         function obj = FrameObj(inputframeType,inputrcvID,inputnexthopID,inputsndID,inputData)
             
             % create intial packetge with 4 all the input information
-            if nargin == 4
+            if nargin == 5
                 %test if the frame type is valid
                 obj.frameType = inputframeType;
                 %receiver verfication
@@ -52,8 +52,8 @@ classdef FrameObj
                 obj.rcvID=bi2de(bitwiseInput(1+8:2*8,1)','left-msb');
                 obj.nexthopID=bi2de(bitwiseInput(1+2*8:3*8,1)','left-msb');
                 obj.sndID=bi2de(bitwiseInput(1+3*8:4*8,1)','left-msb');
-                temp = bitwiseInput(1+4*8:6*8,1)';
-                dataSizeTemp=bi2de(temp,'left-msb');
+                temp = bitwiseInput(1+4*8:6*8,1)'
+                dataSizeTemp=bi2de(temp,'left-msb')
                 
             else
                 error('That is not a valid number of inputs')
@@ -109,11 +109,12 @@ classdef FrameObj
             rcvid_array = de2bi(obj.rcvID,8,'left-msb');
             nhid_array  = de2bi(obj.nexthopID,8,'left-msb');
             sndid_array = de2bi(obj.sndID,8,'left-msb');
-            dataSize_array = de2bi(obj.dataSize,16,'left-msb');
+            dataSize_array = de2bi(obj.dataSize,16,'left-msb')
+            datasizetemp = bi2de(dataSize_array, 'left-msb')
             
             switch obj.frameType
                 case obj.DATAFRAME
-                    value = [type_array'; rcvid_array'; nhid_array'; sendid_array'; dataSize_array'; obj.data];
+                    value = [type_array'; rcvid_array'; nhid_array'; sndid_array'; dataSize_array'; obj.data];
                 case obj.ACKFRAME
                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array'];
                 otherwise
