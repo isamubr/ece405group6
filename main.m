@@ -22,11 +22,10 @@
 % create
 % Import the objects
 import FrameObj
-close all
-clear *
+
 nFrames = 1; % number of frames that will be sent to caculate the FER of the network
 errors =0;
-message = 'test';
+
 sendersIDS = [FrameObj.IDUE1 FrameObj.IDUE3 FrameObj.IDUE2 FrameObj.IDUE3 FrameObj.IDUE1 FrameObj.IDUE2];
 receiversIDS = [FrameObj.IDUE3 FrameObj.IDUE1 FrameObj.IDUE3 FrameObj.IDUE2 FrameObj.IDUE2 FrameObj.IDUE1];
 nTest = length(sendersIDS);
@@ -35,8 +34,8 @@ FER = zeros(nTest,1);
 % the sedn ID and receiver ID will be defined with other teams
 for indexTest = 1:1
     tempString =   strcat(num2str(sendersIDS), '_', num2str(receiversIDS), '_Hello');
-    frame = FrameObj(FrameObj.FRAMEDATA,receiversIDS(indexTest),sendersIDS(indexTest),message);
-    testDebug = frame.frameSerial
+    frame = FrameObj(FrameObj.FRAMEDATA,receiversIDS(indexTest),sendersIDS(indexTest),tempString);
+    frame2 = FrameObj(frame.frameSerial);
     
     for stepFram = 1:nFrames
         switch frame.sndID

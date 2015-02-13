@@ -60,6 +60,12 @@ classdef FrameObj
                 %sender verfication
                 obj.sndID = inputsndID;
                 obj.data = inputData;
+            elseif nargin == 1
+                bitwiseInputSize = length(inputframeType)/8;
+                bitwiseInput = reshape( inputframeType,8,bitwiseInputSize);
+                obj.frameType=bi2de(bitwiseInput(:,1)',8,'left-msb');
+                
+                
             else
                 obj.frameType = 1;
                 %receiver verfication
@@ -124,7 +130,7 @@ classdef FrameObj
                 type_array(1,j) = str2num(type(1,j));
             end
             
-            rcvid = reshape(dec2bin(obj.rcvID,8)',1,[]);
+            recid = reshape(dec2bin(obj.rcvID,8)',1,[]);
             for j=1:size(recid,2)
                 rcvid_array(1,j) = str2num(recid(1,j));
             end

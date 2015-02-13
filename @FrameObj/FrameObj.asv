@@ -60,6 +60,14 @@ classdef FrameObj
                 %sender verfication
                 obj.sndID = inputsndID;
                 obj.data = inputData;
+            elseif nargin == 1
+                bitwiseInputSize = length(inputframeType)/8;
+                bitwiseInput = reshape( inputframeType,8,bitwiseInputSize);
+                obj.frameType=bi2de(bitwiseInput(:,1)',8,'left-msb');
+                
+                obj.rcvID=bi2de(bitwiseInput(:,2)',8,'left-msb');
+                obj.sndID=bi2de(bitwiseInput(:,2)',8,'left-msb');
+                
             else
                 obj.frameType = 1;
                 %receiver verfication
@@ -124,21 +132,23 @@ classdef FrameObj
                 type_array(1,j) = str2num(type(1,j));
             end
             
+            recid = reshape(dec2bin(obj.rcvID,8)',1,[]);
+            for j=1:size(recid,2)
+                rcvid_array(1,j) = str2num(recid(1,j));
+            end
+            
             sendid = reshape(dec2bin(obj.sndID,8)',1,[]);
             for j=1:size(sendid,2)
                 sendid_array(1,j) = str2num(sendid(1,j));
             end
-            
-            rcvid = reshape(dec2bin(obj.rcvID,8)',1,[]);
-            for j=1:size(recid,2)
-                rcvid_array(1,j) = str2num(recid(1,j));
-            end
-            %%%%If we need a next hop
-            %destid =  = reshape(dec2bin(obj.nextID,8)',1,[]);
-            %for j=1:size(destid,2)
-                %destid_array(1,j) = str2num(destid(1,j));
+      
+            %%%%If we need a next hop 
+            %nhid =  = reshape(dec2bin(obj.nexthopID,8)',1,[]);
+            %for j=1:size(nhid,2)
+                %nhid_array(1,j) = str2num(nhid(1,j));
             %end
-            % value = [type_array rcvid_array destid_array sendid_array obj.data'];
+            
+            % value = [type_array rcvid_array nhid_array sendid_array obj.data'];
             
             value = [type_array rcvid_array sendid_array obj.data'];
         end
