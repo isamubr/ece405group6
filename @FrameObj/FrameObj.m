@@ -62,14 +62,7 @@ classdef FrameObj
                 obj.sndID = inputsndID;
                 obj.data = inputData;
             else
-                obj.frameType = 1;
-                %receiver verfication
-                obj.rcvID = 0101;
-                %ADD if we need next hop &come up number
-%                 obj.nexthopID = ????;
-                %sender verfication
-                obj.sndID = 0102;
-                obj.data = 'hello';
+                error('That is not a valid number of inputs')
             end
         end
         function obj = set.frameType(obj,inputframeType)
@@ -121,15 +114,18 @@ classdef FrameObj
             type_array  = de2bi(obj.frameType,8,'left-msb');
             rcvid_array = de2bi(obj.rcvID,8,'left-msb');
             sndid_array = de2bi(obj.sndID,8,'left-msb');
+            
             %If we need a next hop
 %             nhid_array = de2bi(obj.nexthopID,8,'left-msb');
             %If we need a sequence number
 %             sn_array = de2bi(obj.sn,8,'left-msb');
+            %If we need a data size indicator
+%             ds_array = de2bi(obj.dataSize,8,'left-msb');
 
             switch obj.frameType
                 case obj.DATAFRAME
                     value = [type_array'; rcvid_array'; sndid_array'; obj.data];
-%                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array'; sn_array'; obj.data];
+%                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array'; sn_array'; ds_array'; obj.data];
                 case obj.ACKFRAME
                     value = [type_array'; rcvid_array'; sndid_array'];
 %                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array'];
