@@ -62,9 +62,9 @@ classdef FrameObj
                 obj.sndID = inputsndID;
                 obj.data = inputData;
             elseif nargin == 1
-                bitwiseInputSize = length(inputframeType)/8;
-                bitwiseInput = reshape( inputframeType,8,bitwiseInputSize);
-                obj.frameType=bi2de(bitwiseInput(:,1)',8,'left-msb');
+                %bitwiseInputSize = ceil(length(inputframeType)/8);
+                bitwiseInput = inputframeType;
+                obj.frameType=bi2de(bitwiseInput(1:8,1)',8,'left-msb');
                 
                 
             else
@@ -106,7 +106,7 @@ classdef FrameObj
         end
         
         function value = get.dataSize(obj)
-            value = uint8(lenght(obj.data)-8);
+            value = length(obj.data)-8;
         end
         
         function value = get.CRC8(obj)
@@ -120,7 +120,7 @@ classdef FrameObj
             type_array  = de2bi(obj.frameType,8,'left-msb');
             rcvid_array = de2bi(obj.rcvID,8,'left-msb');
             sndid_array = de2bi(obj.sndID,8,'left-msb');
-            
+            dataSize_array = de2bi(obj.dataSize,16,'left-msb');
             %If we need a next hop
 %             nhid_array = de2bi(obj.nexthopID,8,'left-msb');
             %If we need a sequence number
@@ -130,11 +130,11 @@ classdef FrameObj
 
             switch obj.frameType
                 case obj.DATAFRAME
-                    value = [type_array'; rcvid_array'; sndid_array'; obj.data];
-%                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array'; sn_array'; ds_array'; obj.data];
+                    value = [type_array'; rcvid_array'; sndid_array'; dataSize_array'; obj.data];
+%                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array'; sn_array'; ds_array';dataSize_array'; obj.data];
                 case obj.ACKFRAME
-                    value = [type_array'; rcvid_array'; sndid_array'];
-%                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array'];
+                    value = [type_array'; rcvid_array'; sndid_array'; dataSize_array'];
+%                     value = [type_array'; rcvid_array'; nhid_array'; sendid_array';dataSize_array'];
                 otherwise
                     error('Not a supported frame type')
             end
