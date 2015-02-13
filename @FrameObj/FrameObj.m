@@ -64,8 +64,11 @@ classdef FrameObj
             elseif nargin == 1
                 %bitwiseInputSize = ceil(length(inputframeType)/8);
                 bitwiseInput = inputframeType;
-                obj.frameType=bi2de(bitwiseInput(1:8,1)',8,'left-msb');
-                
+                obj.frameType=bi2de(bitwiseInput(1:8,1)','left-msb');
+                obj.rcvID=bi2de(bitwiseInput(1+8:2*8,1)','left-msb');
+                obj.sndID=bi2de(bitwiseInput(1+2*8:3*8,1)','left-msb');
+                temp = bitwiseInput(1+3*8:5*8,1)';
+                dataSizeTemp=bi2de(temp,'left-msb');
                 
             else
                 error('That is not a valid number of inputs')
@@ -121,6 +124,7 @@ classdef FrameObj
             rcvid_array = de2bi(obj.rcvID,8,'left-msb');
             sndid_array = de2bi(obj.sndID,8,'left-msb');
             dataSize_array = de2bi(obj.dataSize,16,'left-msb');
+            
             %If we need a next hop
 %             nhid_array = de2bi(obj.nexthopID,8,'left-msb');
             %If we need a sequence number
