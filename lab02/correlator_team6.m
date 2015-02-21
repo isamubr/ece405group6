@@ -1,7 +1,7 @@
 clear all;
 close all;
 clc;
-number=100;     % total transmission time (300s)/each signal duration (3s)
+number=1;     % total transmission time (300s)/each signal duration (3s)
 
 % randomly choose one of the four equiprobable signals
 seedUsed = rng;
@@ -57,7 +57,7 @@ totalTime = linspace(0,3*100,nsamples * number);
 inputTotal = zeros(1, nsamples * number);
 sumInput = zeros(1,  number);
 sumOutput = zeros(1, number);
-variance = 0.5;
+variance = 0.1;
 for indexNumber = 1:number
     
     
@@ -101,34 +101,15 @@ title([num2str(number),' symbols with AWGN with variance of ', num2str(variance)
 ylim([-5 5])
 
 
-% figure();
-% stem(sumInput);
-% xlabel('time(s)')
-% ylabel('Integration of the input Symbols')
-% title(['Input Integration for',num2str(number)]);
-% figure();
-% stem(sumOutput);
-% xlabel('time(s)')
-% ylabel('Integration of the output Symbols')
-% title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
-% figure();
-% result = abs(sumInput - sumOutput);
-% stem(result);
-% xlabel('time')
-% ylabel('Absolute difference between the input and output')
-% title(['Difference between the input and output integration',num2str(number)]);
-% figure();
-% plot(sumOutput);
-% xlabel('time')
-% ylabel('Integration of the output Symbols')
-% title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
+
 
 
 % Define the orthonormal functions {fm(t)}
 
 fm1 = ones(1,nsamples);
-fm1(1:(2*sampleRate)-1) = 1;
-fm1(2*sampleRate:end) = -1;
+fm1(1:(2*sampleRate)-1) = 1/sqrt(3);
+fm1(2*sampleRate:end) = -1/sqrt(3);
+
 
 fm2 = zeros(1,nsamples);
 fm2(2*sampleRate:end) = 1;
@@ -152,12 +133,25 @@ plot(time,fm3);
 xlabel('time')
 ylabel('fm3(t)')
 title('Orthonormal function fm3(t)')
-% subplot(2,2,4)
-% plot(time,s4);
-% xlabel('time')
-% ylabel('s4(t)')
-% title('Symbol s4(t)')
+
 
 % Integration to get observation vector (ov)
 
+sumOutput = zeros(3, number);
+for indexNumber = 1:number
+    
+    
+  
+    currentReceivedSymbol = outputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples);
+    
+    multi1 = (currentReceivedSymbol .* fm1);
+    sumOutput(1,indexNumber) = sum(multi1);
+        multi2 = (currentReceivedSymbol .* fm2);
+    sumOutput(2,indexNumber) = sum(multi2);
+        multi3 = (currentReceivedSymbol .* fm3);
+    sumOutput(3,indexNumber) = sum(multi3);
+
+    
+    
+end
 % Plot
