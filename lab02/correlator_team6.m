@@ -57,7 +57,7 @@ totalTime = linspace(0,3*100,nsamples * number);
 inputTotal = zeros(1, nsamples * number);
 sumInput = zeros(1,  number);
 sumOutput = zeros(1, number);
-variance = 0.1;
+variance = 0.5;
 for indexNumber = 1:number
     
     
@@ -87,17 +87,20 @@ for indexNumber = 1:number
     
 end
 figure();
+subplot(1,2,1)
 plot(totalTime,inputTotal);
 xlabel('time(s)')
 ylabel('symbols(t)')
 ylim([-5 5])
 title([num2str(number),' symbols for input',]);
-figure();
+subplot(1,2,2)
 plot(totalTime,outputTotal);
 xlabel('time(s)')
 ylabel('symbols(t)')
 title([num2str(number),' symbols with AWGN with variance of ', num2str(variance) ]);
 ylim([-5 5])
+
+
 % figure();
 % stem(sumInput);
 % xlabel('time(s)')
