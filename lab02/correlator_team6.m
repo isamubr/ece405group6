@@ -13,33 +13,36 @@ nsamples = length(time);
 
 s1 = ones(1,nsamples);
 s1(2*sampleRate:end) = 0;
-figure();
-plot(time,s1);
-xlabel('time')
-ylabel('s1(t)')
-title('Symbol s1(t)')
 
 s2 = ones(1,nsamples);
 s2(1:sampleRate-1) = 1;
 s2(sampleRate:(2*sampleRate)-1) = -1;
 s2(2*sampleRate:end) = 0;
-figure();
-plot(time,s2);
-xlabel('time')
-ylabel('s2(t)')
-title('Symbol s2(t)')
 
 s3 = ones(1,nsamples);
 s3(1:(2*sampleRate)-1) = 1;
 s3(2*sampleRate:end) = -1;
+
+
+s4 = -1*ones(1,nsamples);
+
 figure();
+subplot(2,2,1)
+plot(time,s1);
+xlabel('time')
+ylabel('s1(t)')
+title('Symbol s1(t)')
+subplot(2,2,2)
+plot(time,s2);
+xlabel('time')
+ylabel('s2(t)')
+title('Symbol s2(t)')
+subplot(2,2,3)
 plot(time,s3);
 xlabel('time')
 ylabel('s3(t)')
 title('Symbol s3(t)')
-
-s4 = -1*ones(1,nsamples);
-figure();
+subplot(2,2,4)
 plot(time,s4);
 xlabel('time')
 ylabel('s4(t)')
@@ -116,6 +119,38 @@ title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance)
 
 
 % Define the orthonormal functions {fm(t)}
+
+fm1 = ones(1,nsamples);
+fm1(1:(2*sampleRate)-1) = 1;
+fm1(2*sampleRate:end) = -1;
+
+fm2 = zeros(1,nsamples);
+fm2(2*sampleRate:end) = 1;
+
+fm3 = zeros(1,nsamples);
+fm3(sampleRate:(2*sampleRate)-1) = -1;
+
+figure();
+subplot(2,2,1)
+plot(time,fm1);
+xlabel('time')
+ylabel('fm1(t)')
+title('Orthonormal function fm1(t)')
+subplot(2,2,2)
+plot(time,fm2);
+xlabel('time')
+ylabel('fm2(t)')
+title('Orthonormal function fm2(t)')
+subplot(2,2,3)
+plot(time,fm3);
+xlabel('time')
+ylabel('fm3(t)')
+title('Orthonormal function fm3(t)')
+% subplot(2,2,4)
+% plot(time,s4);
+% xlabel('time')
+% ylabel('s4(t)')
+% title('Symbol s4(t)')
 
 % Integration to get observation vector (ov)
 
