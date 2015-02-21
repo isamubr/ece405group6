@@ -1,7 +1,7 @@
 clear all;
 close all;
 clc;
-number=5;     % total transmission time (300s)/each signal duration (3s)
+number=100;     % total transmission time (300s)/each signal duration (3s)
 
 % randomly choose one of the four equiprobable signals
 seedUsed = rng;
@@ -53,10 +53,11 @@ title('Symbol s4(t)')
 
 % zero mean white Gaussian noise of variance 0.5 added
 outputTotal = zeros(1, nsamples * number);
+totalTime = linspace(0,3*100,nsamples * number);
 inputTotal = zeros(1, nsamples * number);
 sumInput = zeros(1,  number);
 sumOutput = zeros(1, number);
-variance = 0.5;
+variance = 0.1;
 for indexNumber = 1:number
     
     
@@ -86,36 +87,38 @@ for indexNumber = 1:number
     
 end
 figure();
-plot(inputTotal);
-xlabel('time')
+plot(totalTime,inputTotal);
+xlabel('time(s)')
 ylabel('symbols(t)')
-title(['Symbols for',num2str(number)]);
+ylim([-5 5])
+title([num2str(number),' symbols for input',]);
 figure();
-plot(outputTotal);
-xlabel('time')
+plot(totalTime,outputTotal);
+xlabel('time(s)')
 ylabel('symbols(t)')
-title(['Symbols for ',num2str(number), ' Variance ', num2str(variance) ]);
-figure();
-stem(sumInput);
-xlabel('time')
-ylabel('Integration of the input Symbols')
-title(['Input Integration for',num2str(number)]);
-figure();
-stem(sumOutput);
-xlabel('time')
-ylabel('Integration of the output Symbols')
-title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
-figure();
-result = abs(sumInput - sumOutput);
-stem(result);
-xlabel('time')
-ylabel('Absolute difference between the input and output')
-title(['Difference between the input and output integration',num2str(number)]);
-figure();
-plot(sumOutput);
-xlabel('time')
-ylabel('Integration of the output Symbols')
-title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
+title([num2str(number),' symbols with AWGN with variance of ', num2str(variance) ]);
+ylim([-5 5])
+% figure();
+% stem(sumInput);
+% xlabel('time(s)')
+% ylabel('Integration of the input Symbols')
+% title(['Input Integration for',num2str(number)]);
+% figure();
+% stem(sumOutput);
+% xlabel('time(s)')
+% ylabel('Integration of the output Symbols')
+% title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
+% figure();
+% result = abs(sumInput - sumOutput);
+% stem(result);
+% xlabel('time')
+% ylabel('Absolute difference between the input and output')
+% title(['Difference between the input and output integration',num2str(number)]);
+% figure();
+% plot(sumOutput);
+% xlabel('time')
+% ylabel('Integration of the output Symbols')
+% title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
 
 
 % Define the orthonormal functions {fm(t)}
