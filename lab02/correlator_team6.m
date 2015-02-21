@@ -51,6 +51,8 @@ title('Symbol s4(t)')
 % zero mean white Gaussian noise of variance 0.5 added
 outputTotal = zeros(1, nsamples * number);
 inputTotal = zeros(1, nsamples * number);
+sumInput = zeros(1,  number);
+sumOutput = zeros(1, number);
 variance = 0.5;
 for indexNumber = 1:number
     
@@ -58,20 +60,27 @@ for indexNumber = 1:number
     sdNoise = sqrt(variance);
     noiseArray = sdNoise.*randn(1,nsamples);
     nextSignal = randi(4);
+    tempInput = 0;
+   
     switch nextSignal
         case 1
-            inputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s1;
-            outputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s1 + noiseArray;
+            tempInput = s1;
+            
         case 2
-                        inputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s2;
-            outputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s2 + noiseArray;
+            tempInput = s2;
+            
         case 3
-                        inputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s3;
-            outputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s3 + noiseArray;
+            tempInput = s3;
+            
         case 4
-                        inputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s4;
-            outputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = s4 + noiseArray;
+            tempInput= s4;
+            
     end
+    tempOutput = tempInput + noiseArray;
+    inputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = tempInput;
+    outputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples) = tempOutput;
+    
+    
 end
 figure();
 plot(inputTotal);
@@ -83,6 +92,27 @@ plot(outputTotal);
 xlabel('time')
 ylabel('symbols(t)')
 title(['Symbols for ',num2str(number), ' Variance ', num2str(variance) ]);
+figure();
+stem(sumInput);
+xlabel('time')
+ylabel('Integration of the input Symbols')
+title(['Input Integration for',num2str(number)]);
+figure();
+stem(sumOutput);
+xlabel('time')
+ylabel('Integration of the output Symbols')
+title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
+figure();
+result = abs(sumInput - sumOutput);
+stem(result);
+xlabel('time')
+ylabel('Absolute difference between the input and output')
+title(['Difference between the input and output integration',num2str(number)]);
+figure();
+plot(sumOutput);
+xlabel('time')
+ylabel('Integration of the output Symbols')
+title(['Input Integration for ',num2str(number), ' Variance ', num2str(variance) ]);
 
 
 % Define the orthonormal functions {fm(t)}
