@@ -127,8 +127,8 @@ ylim([-5 5])
 % Define the orthonormal functions {fm(t)}
 
 fm1 = ones(1,nsamples);
-fm1(1:(2*sampleRate)-1) = 1;
-fm1(2*sampleRate:end) = -1;
+fm1(1:(2*sampleRate)-1) = 1/sqrt(3);
+fm1(2*sampleRate:end) = -1/sqrt(3);
 
 fm2 = zeros(1,nsamples);
 fm2(2*sampleRate:end) = 1;
