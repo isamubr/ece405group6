@@ -26,12 +26,6 @@ s3(2*sampleRate:end) = -1;
 
 s4 = -1*ones(1,nsamples);
 
-e1 = sum(s1 .* s1);
-e2 = sum(s2 .* s2);
-e3 = sum(s3 .* s3);
-e4 = sum(s4 .* s4);
-
-
 figure();
 subplot(2,2,1)
 plot(time,s1);
@@ -63,7 +57,7 @@ totalTime = linspace(0,3*number,nsamples * number);
 inputTotal = zeros(1, nsamples * number);
 sumInput = zeros(1,  number);
 sumOutput = zeros(1, number);
-variance = 0.5;
+variance = 0.1;
 for indexNumber = 1:number
     
     
