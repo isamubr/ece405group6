@@ -143,7 +143,7 @@ title('Orthonormal function fm3(t)')
 
 % Integration to get observation vector (ov)
 
-sumOutputFM = zeros(3, number);
+sumOutputFM = zeros(4, number);
 sumOutputSignalS = zeros(4, number);
 for indexNumber = 1:number
     
@@ -151,11 +151,11 @@ for indexNumber = 1:number
   
     currentReceivedSymbol = outputTotal(1+((indexNumber-1)*nsamples):indexNumber*nsamples);
     
-    multi1 = (currentReceivedSymbol .* fm1);
+    multi1 = (currentReceivedSymbol .* s1);
     sumOutput(1,indexNumber) = sum(multi1);
-        multi2 = (currentReceivedSymbol .* fm2);
+        multi2 = (currentReceivedSymbol .* s2);
     sumOutput(2,indexNumber) = sum(multi2);
-        multi3 = (currentReceivedSymbol .* fm3);
+        multi3 = (currentReceivedSymbol .* s3);
     sumOutput(3,indexNumber) = sum(multi3);
 
     
