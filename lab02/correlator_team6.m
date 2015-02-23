@@ -1,7 +1,7 @@
 clear all;
 close all;
 clc;
-number=1;     % total transmission time (300s)/each signal duration (3s)
+number=100;     % total transmission time (300s)/each signal duration (3s)
 
 % randomly choose one of the four equiprobable signals
 seedUsed = rng;
@@ -25,6 +25,12 @@ s3(2*sampleRate:end) = -1;
 
 
 s4 = -1*ones(1,nsamples);
+
+e1 = sum(s1 .* s1);
+e2 = sum(s2 .* s2);
+e3 = sum(s3 .* s3);
+e4 = sum(s4 .* s4);
+
 
 figure();
 subplot(2,2,1)
@@ -53,11 +59,11 @@ title('Symbol s4(t)')
 
 % zero mean white Gaussian noise of variance 0.5 added
 outputTotal = zeros(1, nsamples * number);
-totalTime = linspace(0,3*100,nsamples * number);
+totalTime = linspace(0,3*number,nsamples * number);
 inputTotal = zeros(1, nsamples * number);
 sumInput = zeros(1,  number);
 sumOutput = zeros(1, number);
-variance = 0.1;
+variance = 0.5;
 for indexNumber = 1:number
     
     
@@ -107,8 +113,8 @@ ylim([-5 5])
 % Define the orthonormal functions {fm(t)}
 
 fm1 = ones(1,nsamples);
-fm1(1:(2*sampleRate)-1) = 1/sqrt(3);
-fm1(2*sampleRate:end) = -1/sqrt(3);
+fm1(1:(2*sampleRate)-1) = 1;
+fm1(2*sampleRate:end) = -1;
 
 
 fm2 = zeros(1,nsamples);
@@ -137,7 +143,8 @@ title('Orthonormal function fm3(t)')
 
 % Integration to get observation vector (ov)
 
-sumOutput = zeros(3, number);
+sumOutputFM = zeros(3, number);
+sumOutputSignalS = zeros(4, number);
 for indexNumber = 1:number
     
     
@@ -155,3 +162,21 @@ for indexNumber = 1:number
     
 end
 % Plot
+timeAxisSum = linspace(0,3*number,number);
+
+figure();
+subplot(2,2,1)
+stem(timeAxisSum,sumOutput(1,:));
+xlabel('time')
+ylabel('Received Signal * fm1(t)')
+title('Integration fm1(t) * X')
+subplot(2,2,2)
+stem(timeAxisSum,sumOutput(2,:));
+xlabel('time')
+ylabel('Received Signal * fm2(t)')
+title('Integration fm2(t) * X')
+subplot(2,2,3)
+stem(timeAxisSum,sumOutput(3,:));
+xlabel('time')
+ylabel('Received Signal * fm3(t)')
+title('Integration fm3(t) * X')
