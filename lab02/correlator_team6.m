@@ -49,8 +49,6 @@ s4 = -1*ones(1,nsamples);
 % title('Symbol s4(t)')
 
 
-
-
 % zero mean white Gaussian noise of variance 0.5 added
 outputTotal = zeros(1, nsamples * number);
 totalTime = linspace(0,3*100,nsamples * number);
