@@ -57,7 +57,7 @@ totalTime = linspace(0,3*number,nsamples * number);
 inputTotal = zeros(1, nsamples * number);
 sumInput = zeros(1,  number);
 sumOutput = zeros(1, number);
-variance = 0.1;
+variance = 0.5;
 for indexNumber = 1:number
     
     
@@ -151,6 +151,8 @@ for indexNumber = 1:number
     sumOutput(2,indexNumber) = sum(multi2);
         multi3 = (currentReceivedSymbol .* s3);
     sumOutput(3,indexNumber) = sum(multi3);
+            multi4 = (currentReceivedSymbol .* s4);
+    sumOutput(4,indexNumber) = sum(multi4);
 
     
     
@@ -162,15 +164,20 @@ figure();
 subplot(2,2,1)
 stem(timeAxisSum,sumOutput(1,:));
 xlabel('time')
-ylabel('Received Signal * fm1(t)')
-title('Integration fm1(t) * X')
+ylabel('Received Signal * s1(t)')
+title('Integration S1(t) * X')
 subplot(2,2,2)
 stem(timeAxisSum,sumOutput(2,:));
 xlabel('time')
-ylabel('Received Signal * fm2(t)')
-title('Integration fm2(t) * X')
+ylabel('Received Signal * s2(t)')
+title('Integration S2(t) * X')
 subplot(2,2,3)
 stem(timeAxisSum,sumOutput(3,:));
 xlabel('time')
-ylabel('Received Signal * fm3(t)')
-title('Integration fm3(t) * X')
+ylabel('Received Signal * s3(t)')
+title('Integration S3(t) * X')
+subplot(2,2,4)
+stem(timeAxisSum,sumOutput(4,:));
+xlabel('time')
+ylabel('Received Signal * s4(t)')
+title('Integration S4(t) * X')

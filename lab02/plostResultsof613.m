@@ -39,7 +39,7 @@ subplot(2,2,2)
 stem(timeSymbols,totalResults);
 xlabel('time(s)')
 ylabel('symbols(t)')
-title([num2str(nSymbols),' detected symbols ID with AWGN with variance of ', num2str(0.5), ' and BER of ', num2str(BER) ]);
+title([num2str(nSymbols),' detected symbols ID with AWGN with variance of ', num2str(2), ' and BER of ', num2str(BER) ]);
 ylim([0 5])
 xlim([0 numberSecond])
 subplot(2,2,3)
@@ -54,6 +54,6 @@ stem(timeSymbols,totalResults .* arrayError);
 
 xlabel('time(s)')
 ylabel('symbols(t)')
-title(['Incorrect detected symbols without substration of the energy with AWGN with variance of ', num2str(0.5)]);
+title(['Incorrect detected symbols without substration of the energy with AWGN with variance of ', num2str(2)]);
 ylim([0 5])
 xlim([0 numberSecond])
