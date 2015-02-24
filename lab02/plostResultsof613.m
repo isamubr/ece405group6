@@ -2,7 +2,9 @@ close all
 sampleRate = 1000;
 numberSecond = length(InputSignal)/1000;
 
-
+currentSNR = snr(InputSignal,(OutputSignalPlusNoise-InputSignal));
+verifySNR = mean(InputSignal.^2)/mean(((OutputSignalPlusNoise-InputSignal).^2));
+verifySNRdB = 10 * log10(verifySNR);
 time = linspace(0,numberSecond,length(InputSignal));
 nsamples = length(time);
 nSymbols = length(inputSymbols);
@@ -20,7 +22,7 @@ subplot(1,2,2)
 plot(time,OutputSignalPlusNoise);
 xlabel('time(s)')
 ylabel('symbols(t)')
-title([num2str(nSymbols),' symbols with AWGN with variance of ', num2str(0.5) ]);
+title([num2str(nSymbols),' symbols with SNR of ', num2str(currentSNR), ' dB' ]);
 ylim([-5 5])
 xlim([0 numberSecond])
 arrayError = (inputSymbols ~= totalResults);
@@ -39,7 +41,7 @@ subplot(2,2,2)
 stem(timeSymbols,totalResults);
 xlabel('time(s)')
 ylabel('symbols(t)')
-title([num2str(nSymbols),' detected symbols ID with AWGN with variance of ', num2str(2), ' and BER of ', num2str(BER) ]);
+title([num2str(nSymbols),' detected symbols ID with SNR ', num2str(currentSNR), ' and BER of ', num2str(BER) ]);
 ylim([0 5])
 xlim([0 numberSecond])
 subplot(2,2,3)
@@ -54,6 +56,6 @@ stem(timeSymbols,totalResults .* arrayError);
 
 xlabel('time(s)')
 ylabel('symbols(t)')
-title(['Incorrect detected symbols without substration of the energy with AWGN with variance of ', num2str(2)]);
+title(['Incorrect detected symbols with SNR of ', num2str(currentSNR),' dB']);
 ylim([0 5])
 xlim([0 numberSecond])
