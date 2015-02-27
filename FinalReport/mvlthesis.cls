@@ -303,31 +303,44 @@ Wednesday\or Thursday\or Friday\or Saturday\fi}
     \bigskip \smallskip
     {\@author} \par
 \vspace{10ex}
-    A {\@thesis_or_diss} \\ Submitted to the Faculty \\ of the \\ WORCESTER
-    POLYTECHNIC INSTITUTE \\ in partial fulfillment of the requirements for the\\
-    Degree of {\@degree_type}\\
+    %A {\@thesis_or_diss} \\ Submitted to the Faculty \\ of the \\ WORCESTER
+    %POLYTECHNIC INSTITUTE \\ in partial fulfillment of the requirements for the\\
+    %Degree of {\@degree_type}\\
+    %in \\ \par
+    A {\@thesis_or_diss} \\ Submitted to Prof. Wyglinski  \\ in partial fulfillment of the requirements of \\ {\@degree_type}\\
     in \\ \par
 \smallskip
     {\@field} \\
-    by\\
-    \bigskip
-    \rule{3in}{0.01in}\\
-    {\@degreeyear}
+    %by\\
+    
+    %Feb. 25. 2015\\
+    %\rule{3in}{0.01in}\\
+    %{\@degreeyear}
   \end{center}
-{
-\vspace{16ex}
-\fmsmallfont
-  APPROVED: \\
-    \smallskip
-    \rule[-.2in]{4.75in}{0.01in}\\
-    {\@chair}, {\@chairtitle}\\
-    \smallskip
-    \rule[-.2in]{4.75in}{0.01in}\\
-    {\@membertwo}\\
-    \smallskip
-    \rule[-.2in]{4.75in}{0.01in}\\
-    {\@memberthree}\\
-}
+  
+  %\begin{right}
+  %\vspace{35ex}
+    %\bigskip
+    %2/25/2015
+   % \end{right}
+    
+%{
+%\vspace{16ex}
+%\fmsmallfont
+
+ % APPROVED: \\
+    %\smallskip
+    %\rule[-.2in]{4.75in}{0.01in}\\
+    %{\@chair}, {\@chairtitle}\\
+    
+    %\smallskip
+    %\rule[-.2in]{4.75in}{0.01in}\\
+    %{\@membertwo}\\
+    
+   % \smallskip
+    %\rule[-.2in]{4.75in}{0.01in}\\
+    %{\@memberthree}\\
+%}
     \vfil\null
 \end{alwayssingle}
 
