@@ -166,29 +166,29 @@ error_comparison = ['Without subtracting the symbol energies, there are ',num2st
 'Subtracting the energ of the symbols, there are ', num2str(percent_errorz),'% errors in ',  num2str(number), ' symbols.       ']
 
 % Plot with energy
-figure();
-subplot(1,2,1)
-
-subplot(2,2,1)
-plot(inputTotal);
-xlabel('time')
-ylabel('symbols(t)')
-title([num2str(number),' Input Symbols']);
-
-subplot(2,2,2)
-plot(X);
-xlabel('time')
-ylabel('symbols(t)')
-title([num2str(number),' Symbols; Noise Variance of ', num2str(variance) ]);
-
-subplot(2,2,3)
-plot(decoded_symbols_without_energy);
-xlabel('time')
-ylabel('samples(t)')
-title([num2str(number), ' Decoded Symblos']);
-
-subplot(2,2,4)
-plot(q_without);
-xlabel('time')
-ylabel('number of incorrect signals')
-title(['Mismatched Symbols for ',num2str(number)]);
+% figure();
+% subplot(1,2,1)
+% 
+% subplot(2,2,1)
+% plot(inputTotal);
+% xlabel('time')
+% ylabel('symbols(t)')
+% title([num2str(number),' Input Symbols']);
+% 
+% subplot(2,2,2)
+% plot(X);
+% xlabel('time')
+% ylabel('symbols(t)')
+% title([num2str(number),' Symbols; Noise Variance of ', num2str(variance) ]);
+% 
+% subplot(2,2,3)
+% plot(decoded_symbols_without_energy);
+% xlabel('time')
+% ylabel('samples(t)')
+% title([num2str(number), ' Decoded Symblos']);
+% 
+% subplot(2,2,4)
+% plot(q_without);
+% xlabel('time')
+% ylabel('number of incorrect signals')
+% title(['Mismatched Symbols for ',num2str(number)]);

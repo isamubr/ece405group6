@@ -1,7 +1,7 @@
 clear all;
 close all;
 clc;
-number=100;     % total transmission time (300s)/each signal duration (3s)
+number=10000;     % total transmission time (300s)/each signal duration (3s)
 
 % randomly choose one of the four equiprobable signals
 seedUsed = rng;
@@ -26,27 +26,27 @@ s3(2*sampleRate:end) = -1;
 
 s4 = -1*ones(1,nsamples);
 
-figure();
-subplot(2,2,1)
-plot(time,s1);
-xlabel('time')
-ylabel('s1(t)')
-title('Symbol s1(t)')
-subplot(2,2,2)
-plot(time,s2);
-xlabel('time')
-ylabel('s2(t)')
-title('Symbol s2(t)')
-subplot(2,2,3)
-plot(time,s3);
-xlabel('time')
-ylabel('s3(t)')
-title('Symbol s3(t)')
-subplot(2,2,4)
-plot(time,s4);
-xlabel('time')
-ylabel('s4(t)')
-title('Symbol s4(t)')
+% figure();
+% subplot(2,2,1)
+% plot(time,s1);
+% xlabel('time')
+% ylabel('s1(t)')
+% title('Symbol s1(t)')
+% subplot(2,2,2)
+% plot(time,s2);
+% xlabel('time')
+% ylabel('s2(t)')
+% title('Symbol s2(t)')
+% subplot(2,2,3)
+% plot(time,s3);
+% xlabel('time')
+% ylabel('s3(t)')
+% title('Symbol s3(t)')
+% subplot(2,2,4)
+% plot(time,s4);
+% xlabel('time')
+% ylabel('s4(t)')
+% title('Symbol s4(t)')
 
 
 % zero mean white Gaussian noise of variance 0.5 added
@@ -84,19 +84,19 @@ for indexNumber = 1:number
     
     
 end
-figure();
-subplot(1,2,1)
-plot(totalTime,inputTotal);
-xlabel('time(s)')
-ylabel('symbols(t)')
-ylim([-5 5])
-title([num2str(number),' symbols for input',]);
-subplot(1,2,2)
-plot(totalTime,outputTotal);
-xlabel('time(s)')
-ylabel('symbols(t)')
-title([num2str(number),' symbols with AWGN with variance of ', num2str(variance) ]);
-ylim([-5 5])
+% figure();
+% subplot(1,2,1)
+% plot(totalTime,inputTotal);
+% xlabel('time(s)')
+% ylabel('symbols(t)')
+% ylim([-5 5])
+% title([num2str(number),' symbols for input',]);
+% subplot(1,2,2)
+% plot(totalTime,outputTotal);
+% xlabel('time(s)')
+% ylabel('symbols(t)')
+% title([num2str(number),' symbols with AWGN with variance of ', num2str(variance) ]);
+% ylim([-5 5])
 
 
 
@@ -115,22 +115,22 @@ fm2(2*sampleRate:end) = 1;
 fm3 = zeros(1,nsamples);
 fm3(sampleRate:(2*sampleRate)-1) = -1;
 
-figure();
-subplot(2,2,1)
-plot(time,fm1);
-xlabel('time')
-ylabel('fm1(t)')
-title('Orthonormal function fm1(t)')
-subplot(2,2,2)
-plot(time,fm2);
-xlabel('time')
-ylabel('fm2(t)')
-title('Orthonormal function fm2(t)')
-subplot(2,2,3)
-plot(time,fm3);
-xlabel('time')
-ylabel('fm3(t)')
-title('Orthonormal function fm3(t)')
+% figure();
+% subplot(2,2,1)
+% plot(time,fm1);
+% xlabel('time')
+% ylabel('fm1(t)')
+% title('Orthonormal function fm1(t)')
+% subplot(2,2,2)
+% plot(time,fm2);
+% xlabel('time')
+% ylabel('fm2(t)')
+% title('Orthonormal function fm2(t)')
+% subplot(2,2,3)
+% plot(time,fm3);
+% xlabel('time')
+% ylabel('fm3(t)')
+% title('Orthonormal function fm3(t)')
 
 
 % Integration to get observation vector (ov)
@@ -158,24 +158,24 @@ end
 % Plot
 timeAxisSum = linspace(0,3*number,number);
 
-figure();
-subplot(2,2,1)
-stem(timeAxisSum,sumOutput(1,:));
-xlabel('time')
-ylabel('Received Signal * s1(t)')
-title('Integration S1(t) * X')
-subplot(2,2,2)
-stem(timeAxisSum,sumOutput(2,:));
-xlabel('time')
-ylabel('Received Signal * s2(t)')
-title('Integration S2(t) * X')
-subplot(2,2,3)
-stem(timeAxisSum,sumOutput(3,:));
-xlabel('time')
-ylabel('Received Signal * s3(t)')
-title('Integration S3(t) * X')
-subplot(2,2,4)
-stem(timeAxisSum,sumOutput(4,:));
-xlabel('time')
-ylabel('Received Signal * s4(t)')
-title('Integration S4(t) * X')
+% figure();
+% subplot(2,2,1)
+% stem(timeAxisSum,sumOutput(1,:));
+% xlabel('time')
+% ylabel('Received Signal * s1(t)')
+% title('Integration S1(t) * X')
+% subplot(2,2,2)
+% stem(timeAxisSum,sumOutput(2,:));
+% xlabel('time')
+% ylabel('Received Signal * s2(t)')
+% title('Integration S2(t) * X')
+% subplot(2,2,3)
+% stem(timeAxisSum,sumOutput(3,:));
+% xlabel('time')
+% ylabel('Received Signal * s3(t)')
+% title('Integration S3(t) * X')
+% subplot(2,2,4)
+% stem(timeAxisSum,sumOutput(4,:));
+% xlabel('time')
+% ylabel('Received Signal * s4(t)')
+% title('Integration S4(t) * X')
