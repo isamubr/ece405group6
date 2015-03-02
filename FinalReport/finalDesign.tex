@@ -1,5 +1,19 @@
 This chapter describe the evolution of frame format proposed in \ref{ch:proposal}. Also, describe the reason
- of each change based on better understand of need of others team 
-The proposed frame format in \ref{ch:proposal}
+ of each change based on better understand of need of others team and the problems in the development
+
 
 \section{FrameObj Evolution}
+
+The proposed frame format in \ref{ch:proposal} had all the necessary fields and some removed to keep the model simple
+The final frame format is 
+
+\begin{table}
+\begin{tabular}{| c | c | c | c | c | c | c | }
+  \hline                       
+  Frame Type & Receiver UE & Sender UE & Data Size & Header CRC & Data & Data CRC\\
+  1 Byte & 1 Byte & 1 Byte & 1 Byte & 1 Byte & 1 to 234 Bytes & 1 Byte\\
+  
+  \hline  
+\end{tabular}
+ \caption{Final Frame Format}
+\end{table}
