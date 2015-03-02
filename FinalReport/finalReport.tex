@@ -7,6 +7,8 @@
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{verbatim} %,amssymb,amsmath}
 \usepackage{epstopdf}
+% load package with some of the available options - you may not need this!
+\usepackage[framed,autolinebreaks,useliterate]{mcode}
 %\usepackage{afterpage}
 
 
@@ -121,6 +123,8 @@ Just a small section for part of the background of my research. \cite{bibtexcite
 
 \bibliography{mybib}
 
+\lstset{caption={FrameObj Source Code},label=FrameObjSrc}
+\lstinputlisting{code/FrameObj.M}
 \end{document}
 
 
