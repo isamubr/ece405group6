@@ -5,15 +5,26 @@ This chapter describe the evolution of frame format proposed in \ref{ch:proposal
 \section{FrameObj Evolution}
 
 The proposed frame format in \ref{ch:proposal} had all the necessary fields and some removed to keep the model simple
-The final frame format is 
+The final frame format is  shown in \ref{tab:finalFrame}.
+The figure \ref{fig:stateMachine} is the final state machine used to shows how the receiver will work
 
 \begin{table}
 \begin{tabular}{| c | c | c | c | c | c | c | }
   \hline                       
   Frame Type & Receiver UE & Sender UE & Data Size & Header CRC & Data & Data CRC\\
-  1 Byte & 1 Byte & 1 Byte & 1 Byte & 1 Byte & 1 to 234 Bytes & 1 Byte\\
+  \hline
+	1 Byte & 1 Byte & 1 Byte & 1 Byte & 1 Byte & 1 to 234 Bytes & 1 Byte\\
   
   \hline  
 \end{tabular}
  \caption{Final Frame Format}
+	\label{tab:finalFrame}
 \end{table}
+
+%RGB 253 254 202
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Diagram.png}
+    \caption{State Machine of transmission of package }
+    \label{fig:stateMachine}
+\end{figure}
