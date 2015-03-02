@@ -5,3 +5,12 @@
 *.asv
 lab02/~$b2Draft.docx
 lab02/~WRD3585.tmp
+*.log
+FinalReport/finalReport.aux
+*.aux
+FinalReport/finalReport.synctex
+*.toc
+*.aux
+*.synctex
+FinalReport/finalReport.toc
+*.aux
