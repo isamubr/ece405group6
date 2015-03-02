@@ -1,6 +1,9 @@
 \contentsline {chapter}{List of Figures}{v}
 \contentsline {chapter}{List of Tables}{vi}
 \contentsline {chapter}{\numberline {1}Introduction}{1}
-\contentsline {chapter}{\numberline {2}Background}{2}
-\contentsline {section}{\numberline {2.1}Background subsection}{2}
-\contentsline {chapter}{Bibliography}{3}
+\contentsline {chapter}{\numberline {2}Final prototype design}{2}
+\contentsline {chapter}{\numberline {3}Experimental results}{3}
+\contentsline {chapter}{\numberline {4}Conclusions}{4}
+\contentsline {chapter}{Bibliography}{5}
+\contentsline {chapter}{\numberline {A}Design Proposal}{6}
+\contentsline {chapter}{\numberline {A}Source Code}{14}

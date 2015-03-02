@@ -7,6 +7,7 @@
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{verbatim} %,amssymb,amsmath}
 \usepackage{epstopdf}
+\usepackage{pdfpages}
 % load package with some of the available options - you may not need this!
 \usepackage[framed,autolinebreaks,useliterate]{mcode}
 %\usepackage{afterpage}
@@ -91,20 +92,21 @@
 \chapter{Introduction}
 \label{ch:introduction}
 
-This is the introcution to my thesis or dissertation
+\input{introduction.tex}
 
-\chapter{Background}
-\label{ch:background}
+\chapter{Final prototype design}
+\label{ch:design}
+\input{finalDesign.tex}
 
-Here is some background you'll need to know about my research.
-
-\section{Background subsection}
-
-Just a small section for part of the background of my research. \cite{bibtexcite}
+\chapter{Experimental results}
+\label{ch:results}
+\input{experimentalresults.tex}
 
 
-%\chapter{Conclusions]
-%\label{ch:conclusions}
+\chapter{Conclusions}
+\label{ch:conclusions}
+\input{conclusion.tex}
+
 
 %This is the end of my paper.
 
@@ -123,8 +125,27 @@ Just a small section for part of the background of my research. \cite{bibtexcite
 
 \bibliography{mybib}
 
+%exemple to use the matlab source code
+%\lstset{caption={FrameObj Source Code},label=FrameObjSrc}
+%\lstinputlisting{code/FrameObj.M}
+\appendix 
+
+
+\chapter{Design Proposal}
+\label{ch:proposal}
+
+\includepdf[pages={-}]{ECE4305ProjectProposal6.pdf}
+
+\appendix 
+
+
+\chapter{Source Code}
+\label{ch:code}
+
+%exemple to use the matlab source code
 \lstset{caption={FrameObj Source Code},label=FrameObjSrc}
 \lstinputlisting{code/FrameObj.M}
+
 \end{document}
 
 
