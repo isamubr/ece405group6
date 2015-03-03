@@ -1,10 +1,2 @@
-<<<<<<< Updated upstream
-Put your abstract here.
-
-%OLD ABSTRACT
-%In this project, we are going to create a simplex control mechanism to coordinate the communications between the nodes. First, we standardize the format of the frames. All the frames transmitted in the system have to be created based on the format. Then, we will utilize CRC-8 to verify the received frame and send the ACK frame if the verification is correct. Finally, we describe the steps and the interfaces with other groups to complete this project.
-=======
 In this project, we are going to create a simplex control mechanism to coordinate the communications between the nodes. In order to implement the function, we need to focus on three tasks.  First, we standardize the format of the frames including one heading and one payload. All the frames transmitted in the system should be created based on the format. Then we utilize CRC-8 twice to verify the received frame header and payload separately. If both CRC checks are successful, the receiver will reply an ACK frame to the sender so that the sender could start to send next frame. Furthermore, we proposed a easy end-to-end routing protocols for the systems. 
 
-
->>>>>>> Stashed changes
