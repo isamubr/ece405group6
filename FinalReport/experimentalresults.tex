@@ -1,1 +1,35 @@
 Put your Experimental results
+
+\begin{table}
+	\centering
+		\begin{tabular}{| c | c | }
+		\hline                       
+		Frame Type UE & Number Received\\
+		\hline
+			ACK & 2\\
+			DATA & 102\\
+			corrupt DATA & 2\\
+			INVALID & 3466\\
+			other & 0\\
+		\hline
+		\end{tabular}
+	\caption{Table of frames received with poor transmission quality and a small hamming distance between frame types}
+	\label{tab:2ACK}
+\end{table}
+
+\begin{table}
+	\centering
+		\begin{tabular}{| c | c | }
+		\hline                       
+		Frame Type & Number Received\\
+		\hline
+			ACK & 0\\
+			DATA & 165\\
+			corrupt DATA & 4\\
+			INVALID & 3559\\
+			other & 0\\
+		\hline
+		\end{tabular}
+	\caption{Table of frames received with poor transmission quality and a larger hamming distance between frame types}
+	\label{tab:0ACK}
+\end{table}

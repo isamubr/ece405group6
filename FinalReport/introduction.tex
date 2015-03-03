@@ -1,1 +1,15 @@
-Put your introduction here
+% my understaninf of the Intro Outline:
+%Description of Network (check)
+%Description of hardware and software (limitations etc.?)
+	%USRP can only do one thing at a time
+	%Simulink is slow and lame
+%Description of Module 6 
+%Description of how we don't have much for experimental results?? (otherwise known as our own limitations??)
+
+In Software Defined Radio Systems and Analysis we are using USRP's to create a Cellular Network through Simulink and Matlab. This network is small, made up of only three users (UE1, UE2, and UE3) connected to two base stations (BS1 and BS2). Two users,  UE1 and UE2 are associated with BS1; BS2 only has one client, UE3. Communication in this network will be through time divided channels for each device in the 0.9e9 chunk of the spectrum at FREQUENCYOFNETWORK. Each Base Station will have a dedicated time slot for either intracellular or intercellular communication. The users within each cell will have a time slot as well, though across cells these time slots will intersect. There will be three different standards used to communicate between devices. UE1 will use Standard 1, and UE2 and UE3 will use Standard 2. Each Base station will be able to communicate with it's user(s) as well as using the higher power Standard 3 to communicate with each other.
+
+
+
+% FROM THE PROPOSAL:
+%In SDRSaA we are creating a Cellular Network with USRPs using Matlab. This network will be small, made up of only three users (UE 1, UE 2, and UE 3) connected to two base stations (BS 1 and BS 2). There will be three different standards used to communicate between nodes. As shown in Figure 1, UE 1 and UE 2 are associated with BS 1 and BS 1 connects to BS 2. BS 2 only has one client, UE 3. We are assuming all the communications between these nodes are on different channels. UE 1 talks to BS 1 through channel 1, UE2 talks to BS1 on channel 2. There will be at least 4 channels for the system. The USRPs run with Matlab cannot handle full duplex mode so each segment of communication will be in simplex mode. We are also assuming that the network will be static; none of the users will change base stations.
+%As Team 6 we will be establishing end-to-end network resource allocation management as well as exchanging of control information and message/ACK forwarding between the UEs and the BS units. Other teams will be creating the three standards and the channels used to transmit messages as well as initializing the network and allocating the resources of each of the base stations.
