@@ -283,13 +283,13 @@ Wednesday\or Thursday\or Friday\or Saturday\fi}
 % above macros.
 
 % Set the font that will be used in the front matter headings
-\def\fmfont{\fontsize\@xiipt{14.5}\selectfont}
+\def\fmfont{\fontsize\@xiipt{34.5}\selectfont}
 \def\fmsmallfont{\fontsize\@xiipt{14pt}\selectfont}
 
 \def\maketitle{
 {\ssp
 \begin{alwayssingle}
-    \let\footnotesize\small
+    \let\footnotesize\large
     \let\footnoterule\relax
     \thispagestyle{empty}
     \setcounter{page}{1}
