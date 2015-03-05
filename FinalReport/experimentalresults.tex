@@ -21,6 +21,25 @@ section 1 tests the ways we can make an invalid frame
 \subsection{Using Team 4 physical layer}
 \section{End-to-End Local Machine Testing }
 %Renato
+The test of the implementation of the end to end communication.
+Based on proposal of final desing project \cite{cdproj}, there
+are six case to be tested in the end to end communication
+\begin{enumerate}
+  \item Extra-cellular communications between UEs
+  \begin{enumerate}
+    \item US1 $\rightarrow$ BS1 $\rightarrow$ BS2 $\rightarrow$ US3
+    \item US3 $\rightarrow$ BS2 $\rightarrow$ BS1 $\rightarrow$ US1
+		\item US2 $\rightarrow$ BS1 $\rightarrow$ BS2 $\rightarrow$ US3
+		\item US3 $\rightarrow$ BS2 $\rightarrow$ BS1 $\rightarrow$ US2
+  \end{enumerate}
+  \item Intra-cellular communications between UEs
+	  \begin{enumerate}
+    \item US1 $\rightarrow$ BS1 $\rightarrow$ US2
+    \item US2 $\rightarrow$ BS1 $\rightarrow$ US1
+	\end{enumerate}
+\end{enumerate}
+
+The 
 
 \begin{table}
 	\centering
