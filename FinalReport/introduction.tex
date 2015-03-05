@@ -1,13 +1,8 @@
-% my understaninf of the Intro Outline:
-%Description of Network (check)
-%Description of hardware and software (limitations etc.?)
-	%USRP can only do one thing at a time
-	%Simulink is slow and lame
-%Description of Module 6 
-%Description of how we don't have much for experimental results?? (otherwise known as our own limitations??)
+In Software Defined Radio Systems and Analysis we are using USRPs to create a Cellular Network through Simulink and Matlab. This network is small, made up of only three users (UE1, UE2, and UE3) connected to two base stations (BS1 and BS2). Two users,  UE1 and UE2 are associated with BS1; BS2 only has one client, UE3. Communication in this network will be through time divided channels for each device in the 0.9e9 chunk of the spectrum at FREQUENCYOFNETWORK. Each Base Station will have a dedicated time slot for either intracellular or intercellular communication. The users within each cell will have a time slot as well, though across cells these time slots will intersect. There will be three different standards used to communicate between devices. UE1 will use Standard 1, and UE2 and UE3 will use Standard 2. Each base station will be able to communicate with it's associated user(s) as well as using the higher power Standard 3 to communicate with each other.
 
-In Software Defined Radio Systems and Analysis we are using USRP's to create a Cellular Network through Simulink and Matlab. This network is small, made up of only three users (UE1, UE2, and UE3) connected to two base stations (BS1 and BS2). Two users,  UE1 and UE2 are associated with BS1; BS2 only has one client, UE3. Communication in this network will be through time divided channels for each device in the 0.9e9 chunk of the spectrum at FREQUENCYOFNETWORK. Each Base Station will have a dedicated time slot for either intracellular or intercellular communication. The users within each cell will have a time slot as well, though across cells these time slots will intersect. There will be three different standards used to communicate between devices. UE1 will use Standard 1, and UE2 and UE3 will use Standard 2. Each Base station will be able to communicate with it's user(s) as well as using the higher power Standard 3 to communicate with each other.
+This cellular network will send text messages between UEs. These messages must be transferred to the intended receivers through the base stations. To ensure that the message will able to be routed properly through the network and read by the receiver there must be a system of encoding these text messages. This encoding  must be readable by each UE and have the means for each base station to determine the intended receiver. There should also be methods to ensure that the correct message has been received. Team 6 proposed the creation of a MAC frame format that could be sent and decoded by each of the standards and the use of an ACK control packet that could be sent after a properly received message to signal transmission. We will be explaining our final  design as well as the methodology for testing our designs and the results of those tests. 
 
+%pretty sure this could use a better ending, we shall see
 
 
 % FROM THE PROPOSAL:
