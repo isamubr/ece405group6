@@ -2,15 +2,6 @@
 % Encoding: Cp1252
 
 
-@Manual{cdproj,
-  Title                    = {Course Design Project Cellular Network Architecture},
-  Author                   = {ECE 4305},
-  Organization             = {WPI},
-
-  Owner                    = {Renato},
-  Timestamp                = {2015.03.05}
-}
-
 @Book{bibtexcite,
   Title                    = {Awesome Book},
   Author                   = {The Author},
@@ -18,5 +9,13 @@
   Year                     = {2008},
 
   Pages                    = {5, 23-33}
+}
+
+@Manual{cdproj,
+  Title                    = {Course Design Project Cellular Network Architecture},
+  Organization             = {WPI},
+
+  Owner                    = {Renato},
+  Timestamp                = {2015.03.05}
 }
 
