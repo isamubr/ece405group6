@@ -31,8 +31,30 @@ The figure \ref{fig:stateMachine} is the final state machine used to shows how t
 
 \section{Frame Types descriptions}
 %Renato
+We created two frame type baaed on the needs of make a end to end communication.
 
+\begin{description}
+  \item[Data Frame] \hfill \\
+  It is used to transmit a string message with the limit of 234 bytes. The encode of those bytes is using a ASCII standard. All the bits are order to left most significant bit.
+	It is important to guaranteed the decoding of this string in the receiver don’t be machine depend. 
+	
+  \item[ACK Frame] \hfill \\
+  It is the smallest package possible becuase it only have the header information because the data files is not transmitted. It make its transmission time smaller than any data frame. It is reused by Team 4 in their test. 
+\end{description}
 
+The frame object was used by other teams so three new types were defined and used by them.
+\begin{description}
+  \item[REQ Frame] \hfill \\
+It is used by Team 4 to request a polling for all devices on the network. It was used by Team 4
+	
+  \item[Poll Frame] \hfill \\
+ It is used by Team 4 to return the polling information of current device to requested polling. 
+  \item[Table Frame] \hfill \\
+ It is used by Team 5 to return the address table for all devices in the network.
+
+\end{description} 
+
+The frame type was a easy way to change the behavior of the receiving process based on the type.  
 %RGB 253 254 202
 \begin{figure}[ht]
     \centering

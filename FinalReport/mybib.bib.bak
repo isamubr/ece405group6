@@ -2,6 +2,26 @@
 % Encoding: Cp1252
 
 
+@Manual{cdproj,
+  Title                    = {Course Design Project Cellular Network Architecture},
+  Author                   = {ECE 4305},
+  Organization             = {WPI},
+
+  Owner                    = {Renato},
+  Timestamp                = {2015.03.05}
+}
+
+@Misc{videodemo,
+  Title                    = {Final Demostration of over the air transmission of frame object},
+
+  Author                   = {Team 6 ECE 4305},
+  HowPublished             = {https://www.youtube.com/watch?v=Y0MWQHVbX1w\&feature=youtu.be},
+  Year                     = {2015},
+
+  Owner                    = {Renato},
+  Timestamp                = {2015.03.05}
+}
+
 @Book{bibtexcite,
   Title                    = {Awesome Book},
   Author                   = {The Author},
@@ -9,13 +29,5 @@
   Year                     = {2008},
 
   Pages                    = {5, 23-33}
-}
-
-@Manual{cdproj,
-  Title                    = {Course Design Project Cellular Network Architecture},
-  Organization             = {WPI},
-
-  Owner                    = {Renato},
-  Timestamp                = {2015.03.05}
 }
 
