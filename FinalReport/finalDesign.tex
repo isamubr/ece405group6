@@ -1,5 +1,5 @@
-This chapter describe the evolution of frame format proposed in \ref{ch:proposal}. Also, describe the reason
- of each change based on better understand of need of others team and the problems in the development
+This chapter describes the evolution of frame format proposed in \ref{ch:proposal}. Also, it describes the reason
+ for each change based on better understanding of the needs of the other teams and the problems in the development.
 
 
 \section{MAC Frame Construction}
@@ -23,6 +23,36 @@ The figure \ref{fig:stateMachine} is the final state machine used to shows how t
 
 \section{Transmission and reception process}
 %Rebecca
+
+Developing a frame format for transmission through the cellular network is only one part of the end-to-end requirements of data transmission. There must be a system put in place that transfers the data frame between devices and ensures that it gets to the proper receiver. Once at the receiver there should be a check to ensure that the data was received correctly. The reception of a correctly transmitted data frame should return a control frame, ACK, to the sender.  This allows the sending UE to be certain that the data was received correctly and allows it to resend if the ACK is not received. Just like the data frame, the ACK will have to be properly routed through the network. 
+
+The network is initialized by Teams 4 and 5 who create a table of the BS to which each UE has connected. Each UE will always transmit to the same BS, so the data frame can be automatically be sent to the initial base station in the appropriate timeslot.  To determine the routing path at the base station we need to compare the receiver ID field with the IDs in the table and identify if the receiver is connected to the initial cell or if the data frame will need to be sent between cells
+
+
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{State_Machine_yellow.PNG}
+    \caption{State Machine of the transmission of a package }
+    \label{fig:stateMachine}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ACK_timeout_short.PNG}
+    \caption{Diagram of the shortest time between a UE transmitting a frame of data and receiving the corresponding ACK}
+    \label{fig:ACKtimeshort}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ACK_timeout_long.PNG}
+    \caption{Diagram of the longest time between a UE transmitting a frame of data and receiving the corresponding ACK}
+    \label{fig:ACKtimelong}
+\end{figure}
+
+
 
 % so I am going to be describing the state machine essentially....was going to do this but I might go and write the intro frist to have a beter idea of what is going on.
 
@@ -56,26 +86,7 @@ It is used by Team 4 to request a polling for all devices on the network. It was
 
 The frame type was a easy way to change the behavior of the receiving process based on the type.  
 %RGB 253 254 202
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.8\textwidth]{State_Machine_yellow.PNG}
-    \caption{State Machine of the transmission of a package }
-    \label{fig:stateMachine}
-\end{figure}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.8\textwidth]{ACK_timeout_long.PNG}
-    \caption{Diagram of an example of the longest time between a UE transmitting frame of data and receiving the corresponding ACK}
-    \label{fig:ACKtimelong}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.8\textwidth]{ACK_timeout_short.PNG}
-    \caption{Diagram of the shortest time between a UE transmitting a frame of data and receiving the corresponding ACK}
-    \label{fig:ACKtimeshort}
-\end{figure}
 
 \begin{figure}[ht]
     \centering
