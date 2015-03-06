@@ -5,11 +5,11 @@ Put your Experimental results
 % not sure how much of this le will go over...  :/
 An easy way of being able to integrate with the other teams seemed to be through the creation of a class, FrameObj, which would not only provide the other modules with a means of creating a frame but a list of properties that could be called for easy debugging. In this object we can also store the values of constants and the ID numbers of devices, statuses, etc.  There are two ways that an instance of the class FrameObj could be constructed,  from the basic requirements of the frame (Frame type, Sender ID number , Receiver ID number, and Data) or from the bits of a frame.
 
-FrameObj was written with a property for almost every field in the frame format. One notable exception is the data field of the frame. The property data is actually a combination of the data field and the CRC for the data. There are some additional properties as well; header and frameArray are not individual fields, instead they combine the fields of the entire header and frame respectively. The property classUse is not intended to be used outside the of the property data, it signifies which of the two ways of class initialization are used so that the data field can operate differently for either as well as for the different frameTypes.
+FrameObj was written with a property, Listing \ref{propFrameObj}, for almost every field in the frame format. One notable exception is the data field of the frame. The property data is actually a combination of the data field and the CRC for the data. There are some additional properties as well; header and frameArray are not individual fields, instead they combine the fields of the entire header and frame respectively. The property classUse is not intended to be used outside the of the property data, it signifies which of the two ways of class initialization are used so that the data field can operate differently for either as well as for the different frameTypes.
 \lstset{caption={Variable Properties of FrameObj},label=propFrameObj} 
 \begin{lstlisting} 
     properties
-        classUse    %Identifies which configuration was used in this instance of FrameObj
+        classUse    %Identifies which input configuration was used
         frameType   %Identifies the type of frame that is being used
         rcvID       %The identification number of the destination receiver
         sndID       %The identification number of the sender.
@@ -25,9 +25,10 @@ FrameObj was written with a property for almost every field in the frame format.
     end
 \end{lstlisting}
 
-While writing FrameObj we also wrote the script FrameTest to test the various configurations under which FrameObj might be used. We tried to account for errors, both through using CRCs to protect our bits and by preparing for the rare errors that could happen and not result in an error with the CRC. FrameTest has been re-ordered in sections to best explain the current configuration of FrameObj and not to reflect the code development of FrameObj.
+While writing FrameObj we also wrote the script FrameTest to test the various configurations under which FrameObj might be used. We tried to account for errors, both through using CRCs to protect our bits and by preparing for the rare errors that could happen and not result in an error with the CRC. FrameTest has been re-ordered in sections to best explain the current configuration of FrameObj and not to reflect the code development of FrameObj. The display statements in FrameTest showing the functionality of FrameObj can be found in Appendix \ref{FrameTestSrc} but are omitted here for clarity.
 
-The first section of FrameTest shows the creation of an ACK frame. An ACK is a frame header with the frametype ACKFRAME. In FrameTest it is created from the frame constants: ACKFRAME, UEID1, and UEID2 with a zero entered instead of data.   
+The first section of FrameTest shows the creation of an ACK frame. An ACK is a frame header with the frametype ACKFRAME. In FrameTest it is created from the frame constants: ACKFRAME, UEID1, and UEID2 with a zero entered instead of data.  
+ 
 \lstset{caption={FrameTest Section 1: ACK},label=FrameTest1} 
 \begin{lstlisting}
 % create ACK
@@ -35,6 +36,7 @@ ACKtype = FrameObj(FrameObj.ACKFRAME, FrameObj.IDUE1, FrameObj.IDUE2, 0);
 \end{lstlisting}
 
 These constant properties correspond to the numbers 255, 101, and 102. Instead of just passing frameType=255 through the FrameObj (as we do with device ID numbers) we use a switch statement to compare the frameType input field to the six frameTypes used in FrameObj. The frameType is the most important property of our frame, it is the first part checked every time a frame is received. If a number is used that is not associated with a frameType it will result in a frame that is INVALID.
+
 \lstset{caption={Function defining the frameType property of FrameObj},label=frameType} 
 \begin{lstlisting} 
 %frameType
@@ -60,7 +62,8 @@ These constant properties correspond to the numbers 255, 101, and 102. Instead o
         end
 \end{lstlisting}
 
-Many of the other FrameObj properties depend on frameType. For instance ACK has no data CRC, as it has no data. For an FrameObj with frameType ACKFRAME, calling the property dCRC8 would result in an error, halting the program. Similarly, calling dCRC8 will result in an error if an unspecified frameType is used. This aids with frame creation. When an undefined frameType is used, errors will be triggered for each property that depends on frameType until that functionality is added. This way we can be sure that we are not using functionality assumed from other frameTypes. 
+Many of the other FrameObj properties depend on frameType. For instance ACK has no data CRC, as it has no data. For an FrameObj with frameType ACKFRAME, calling the property dCRC8 would result in an error, halting the program. Similarly, calling dCRC8 will result in an error, shown in Listing \ref{dCRC8}, if an unspecified frameType is used. This aids with frame creation. When an undefined frameType is used, errors will be triggered for each property that depends on frameType until that functionality is added. This way we can be sure that we are not using functionality assumed from other frameTypes. 
+
 \lstset{caption={Function defining the dCRC8 property of FrameObj},label=dCRC8} 
 \begin{lstlisting} 
 %dCRC8
@@ -74,8 +77,8 @@ Many of the other FrameObj properties depend on frameType. For instance ACK has 
                 case FrameObj.ACKFRAME      %ACK
                     error('This is an ACK, it has no data therefor no CRC')
                     %If there is no data there should be no check
-										....
-								otherwise
+					....
+				otherwise
                     error('Not a supported frame type for dCRC8')
                     % If this error occurs while using a legitimate frame
                     % type please add an addiional case statement for that
@@ -84,7 +87,14 @@ Many of the other FrameObj properties depend on frameType. For instance ACK has 
 
 No matter what type of valid frame is defined in FrameObj it will always have the same header format and length. The display messages in the command window shown in \ref{fig:FrameTest1} confirm that there are 5 bytes of information in this ACK frame and the dataSize is hard-coded to 0. 
 
-The INVALID frameType is an important part of protecting the class FrameObj from error filled data especially when creating a FrameObj from transceived bits. Critical errors which will cause Matlab errors should result in an INVALID frame. In Section 2 of FrameTest we created three errors that resulted in INVALID frames, the output of this section is shown in \ref{fig:FrameTest2}.
+\begin{figure}[h]
+    \includegraphics[width=0.5\textwidth, left]{FrameTest1.PNG}
+    \caption{Command window output of FrameTest Section 1 showing ACK frame attributes }
+    \label{fig:FrameTest1}
+\end{figure}
+
+The INVALID frameType is an important part of protecting the class FrameObj from error filled inputs especially when creating a FrameObj from transceived bits. Critical errors which would cause Matlab errors should result in an INVALID frame instead. In Section 2 of FrameTest, Listing \ref{FrameTest2}, we created three errors that resulted in INVALID frames, the output of this section is shown in \ref{fig:FrameTest2}.
+
 \lstset{caption={FrameTest Section 2: INVALID},label=FrameTest2} 
 \begin{lstlisting} 
 % nonsense frameType
@@ -101,9 +111,16 @@ receivedcbits(2*8+1:3*8) =de2bi(uint8(FrameObj.IDUE3),8,'left-msb');
 wrongcrc = FrameObj(receivedcbits);
 \end{lstlisting} 
 
-The first error, INVALIDtype, is the most straight forward, instead of using a legitimate frametype as the first input to FrameObj, we used an invalid number: 20. This input will be passed to frameType where it will not match any of the defined switch cases in the property frameType shown above and will be set to INVALID through 'otherwise'. The output is shown in \ref{fig:FrameTest2}.  This is the only way to create an INVALID frame by using 4 input fields of FrameObj. 
+The first error, INVALIDtype in Listing \ref{FrameTest2}, is the most straight forward, instead of using a legitimate frametype as the first input to FrameObj, we used an invalid number: 20. This input will be passed to frameType where it will not match any of the defined switch cases in the property frameType from Listing \ref{frameType} and will be set to INVALID through 'otherwise'. The output is shown in \ref{fig:FrameTest2}.  This is the only way to create an INVALID frame by using 4 input fields of FrameObj. 
 
-The next two types of errors that result in INVALID frames are checked for in the FrameObj constructor when the input is in bits. The first of these errors stems from the minimum size of a frame and therefore from the minimum acceptable length of the n*1 input. The array used in FrameObj, receivedshort,  must be at least 40 bits long to represent a valid frame. By defaulting all shorter inputs to INVALID we can be certain that we will not be indexing outside of the dimensions of the input. \ref{fig:FrameTest2} shows that when the input has a length of only 39 bits the resulting frameType will be INVALID. 
+\begin{figure}[h]
+    \includegraphics[width=0.9\textwidth, left]{FrameTest2.PNG}
+    \caption{Command window output of FrameTest Section 2 showing that all three very wrong frames are INVALID }
+    \label{fig:FrameTest2}
+\end{figure}
+
+The next two types of errors that result in INVALID frames are checked for in the FrameObj constructor, Listing \ref{FrameObj1} when the input is in bits. The first of these errors stems from the minimum size of a frame and therefore from the minimum acceptable length of the n*1 input. The array used in FrameObj, receivedshort from Listing \ref{FrameTest2},  must be at least 40 bits long to represent a valid frame. By defaulting all shorter inputs to INVALID we can be certain that we will not be indexing outside of the dimensions of the input. \ref{fig:FrameTest2} shows that when the input has a length of only 39 bits the resulting frameType will be INVALID. 
+
 \lstset{caption={Single bit array input constructor of FrameObj},label=FrameObj1} 
 \begin{lstlisting} 
 %Constructor, FrameObj with 1 array of bits
@@ -118,7 +135,7 @@ The next two types of errors that result in INVALID frames are checked for in th
                     % detects if there is an error in the CRC of the header
                     [~, err] = step(hDetect, bitwise(1:5*8,1));
                     if (err ==0)
-																						.....
+						....
                     else
                         % the crc does not match and the header is junk
                         obj.frameType = FrameObj.INVALID;
@@ -133,36 +150,38 @@ The next two types of errors that result in INVALID frames are checked for in th
             end
 \end{lstlisting} 
 
-The code from the FrameObj constructor above shows the source of the last error that will result in an INVALID frame. After checking for the minimum size of the input, the constructor will check the CRC of the header. In FrameTest we guarantee that the header will cause a CRC error by replacing one UEID number with another in the bit array. An error with the header CRC is not critical for the FrameObj construction but it is important for the functionality of the frame format in the network.
+The code from the FrameObj constructor in Listing \ref{FrameObj1}, shows the source of the last error that will result in an INVALID frame. After checking for the minimum size of the input, the constructor will check the CRC of the header. In FrameTest, Listing \ref{FrameTest2} we guarantee that the header will cause a CRC error by replacing the sndID number with another UEID number in the bit array receivedcbits. An error with the header CRC is not necessarily critical for the FrameObj construction but it is important for the functionality of the frame format in the network.
 
 The data field of the frame format is the most complicated property to implement in FrameObj. Not only does it change dramatically with frameType but the way it functions changes with the way that FrameObj is used, with either 1 or 4 inputs. For an ACKFRAME frameType the data property must be initialized as a value or there will be an error but data should not be used. For a DATAFRAME frameType, data must either take in a string or an array of bits. Other frameTypes will have different requirements which means that very little processing can be done in the constructor of the FrameObj, the bulk of data must be defined in the property function. 
 
-Section 3 of TestFrame tests whether the same values for each of the FrameObj properties will be returned. 
+Section 3 of TestFrame, Listing \ref{TestFrame3}, tests the many aspects of the data creation of FrameObj as well as the dataSize. It does that by first properly creating the FrameObj fromconst and using the frameArray property to create the array of bits. With or without zero padding at the end, receivedfrombits can be used to create a FrameObj identical to fromconst in every way. \ref{fig:FrameTest3} shows that every property of fromconst matches the corresponding property in frombits. The data property is only able to be found from the bitwise input when the dataSize is accurate.   
 
+\lstset{caption={FrameTest Section 3: DATA },label=FrameTest3} 
+\begin{lstlisting} 
+str = [' abcdefghijklmnopqrstuvwxyz' char(10)]; %28 chars
+str = [str str str];    % str is 28*3= 84 char long
 
+%create the instance of FrameObj 'fromconst'
+%adds 2000 zeros to the end of the bits 'fromconst'
+fromconst = FrameObj(FrameObj.DATAFRAME,FrameObj.IDUE1,FrameObj.IDUE2,str);
+receivedfrombits = [fromconst.frameArray; zeros(2000, 1)];
 
+%create the instance of FrameObj 'frombits' which should be identical to
+%'fromconst' 
+%all trace of zero padding is gone
+frombits = FrameObj(receivedfrombits);
+\end{lstlisting} 
 
-
-\begin{figure}[p]
-    \includegraphics[width=0.5\textwidth, left]{FrameTest1.PNG}
-    \caption{Command window output of FrameTest Section 1 showing ACK frame attributes }
-    \label{fig:FrameTest1}
-\end{figure}
-
-\begin{figure}[p]
-    \includegraphics[width=0.55\textwidth, left]{FrameTest2.PNG}
-    \caption{Command window output of FrameTest Section 2 showing that all three very wrong frames are INVALID }
-    \label{fig:FrameTest2}
-\end{figure}
-
-\begin{figure}[p]
+\begin{figure}[h]
     \includegraphics[width=0.77\textwidth, left]{FrameTest3.PNG}
     \caption{Command window output of FrameTest Section 3 showing an instances of FrameObj being created from both types of inputs }
     \label{fig:FrameTest3}
 \end{figure}
 
-\begin{figure}[p]
-    \includegraphics[width=0.77\textwidth, left]{FrameTest4.PNG}
+
+
+\begin{figure}[h]
+    \includegraphics[width=0.8\textwidth, left]{FrameTest4.PNG}
     \caption{Command window output of FrameTest Section 4 showing dataSize limits  }
     \label{fig:FrameTest4}
 \end{figure}
