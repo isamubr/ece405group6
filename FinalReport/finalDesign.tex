@@ -11,7 +11,6 @@ This chapter describes the evolution of frame format proposed in \ref{ch:proposa
 %TODO Le
 The proposed frame format in \ref{ch:proposal} had all the necessary fields and some removed to keep the model simple
 The final frame format is  shown in \ref{tab:finalFrame}.
-The figure \ref{fig:stateMachine} is the final state machine used to shows how the receiver will work
 
 \begin{table}
 \begin{tabular}{| c | c | c | c | c | c | c | }
@@ -33,7 +32,7 @@ Developing a frame format for transmission through the cellular network is only 
 
 \subsection {Routing}
 
-The network is initialized by Teams 4 and 5 who create a table of the BS to which each UE has connected. Each UE will always transmit to the same BS, so the data frame can be automatically be sent to the initial base station in the appropriate timeslot.  To determine the routing path at the base station we need to compare the receiver ID field with the IDs in the table and identify if the receiver is connected to the initial cell or if the data frame will need to be sent between cells. If it is sent to the second base station, the data frame will undergo the same routing check again before being sent to the device specified by the receiver. The response ACK will follow the reverse path with all of the same checks at the base station(s). The path through the base stations and UEs is depicted in Figure \ref{stateMachine}.
+The network is initialized by Teams 4 and 5 who create a table of the UEs to which each BS has connected. Each UE will always transmit to the same BS, so the data frame can be automatically be sent to the initial BS in the appropriate timeslot.  To determine the routing path at the BS we need to compare the receiver ID field with the IDs in the table and identify if the receiver is connected to the initial cell or if the data frame will need to be sent between cells. If it is sent to the second BS, the data frame will undergo the same routing check again before being sent to the device specified by the receiver. The response ACK will follow the reverse path with all of the same checks at the BS(s). The path through the BSs and UEs is depicted in Figure \ref{stateMachine}.
 
 \begin{figure}[ht]
     \centering
@@ -43,7 +42,9 @@ The network is initialized by Teams 4 and 5 who create a table of the BS to whic
 \end{figure}
 
 \subsection {The ACK response }
+The ACK response should only be triggered by the transmission of correct data. We included the CRC of the data field as a section of the data frame so that the CRC can be used to check if the data has changed during any part of it's journey through the network. A data frame which fails the CRC check will have the same result as not receiving any frame at all or of receiving an INVALID frame, no ACK will be sent as seen in Figure \ref{stateMachine}. A correct CRC should trigger the UE to send a ACK with the rec
 
+If there is no ACK received back from the UE that was sent a data frame, then that data frame will eventually have to be resent from the original UE to achieve transmission. The data frame should not be resent before the ACK has an appropriate amount of time to return. Depending on the position of each UE's timeslot in the transmission cycle and whether the UEs are within the same cell, the total time between the the transmission of the data frame and the reception of the ACK will vary greatly. Figure \ref{fig:ACKtimeshort} shows the shortest possible time between transmission and reception. Figure \ref{fig:ACKtimelong} shows the longest, the time increases by a factor of 2. 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{ACK_timeout_short.PNG}
