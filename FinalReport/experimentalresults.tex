@@ -184,7 +184,7 @@ long= FrameObj(FrameObj.DATAFRAME, FrameObj.IDUE1, FrameObj.IDUE2, str);
     \label{fig:FrameTest3}
 \end{figure}
 
-The length the data field in all frameTypes is limited to a maximum of 234 bytes (MAXDATA). Section 4 of FrameTest shows how errors in dataSize would be prevented from being greater than input dimensions. This will prevent Matlab errors but will not significantly increase the likelihood of the data being correct. In Listing \ref{FrameTest4.1} the size of the data input 'str' is increased from 84 bits in Listing \ref{FrameTest3} to 252 bits. The data property should cut off 18 bits before creating and appending the dCRC8.
+The length the data field in all frameTypes is limited to a maximum of 234 bytes (MAXDATA). Section 4 of FrameTest shows how errors in dataSize would be prevented from being greater than input dimensions. This will prevent Matlab errors but will not significantly increase the likelihood of the data being correct. In Listing \ref{FrameTest4} the size of the data input 'str' is increased from 84 bits in Listing \ref{FrameTest3} to 252 bits. The data property should cut off 18 bits before creating and appending the dCRC8.
 
 \lstset{caption={FrameTest Section 4: DataSize },label=FrameTest4} 
 \begin{lstlisting} 
