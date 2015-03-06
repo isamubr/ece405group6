@@ -85,8 +85,8 @@ Many of the other FrameObj properties depend on frameType. For instance ACK has 
 
 No matter what type of valid frame is defined in FrameObj it will always have the same header format and length. The display messages in the command window shown in Figure \ref{fig:FrameTest1} confirm that there are 5 bytes of information in this ACK frame and the dataSize is hard-coded to 0. 
 
-\begin{figure}[h]
-    \includegraphics[width=0.5\textwidth, left]{FrameTest1.PNG}
+\begin{figure}[ht]
+    \includegraphics[width=0.5\textwidth]{FrameTest1.PNG}
     \caption{Command window output of FrameTest Section 1 showing ACK frame attributes }
     \label{fig:FrameTest1}
 \end{figure}
@@ -111,8 +111,8 @@ wrongcrc = FrameObj(receivedcbits);
 
 The first incorrect initialization of FrameObj, INVALIDtype in Listing \ref{FrameTest2}, is the most straight forward, instead of using a legitimate frametype as the first input to FrameObj, we used an invalid number: 20. This input will be passed to frameType where it will not match any of the defined switch cases in the property frameType, Listing \ref{frameType}, and will be set to INVALID through 'otherwise'. This output is shown in Figure\ref{fig:FrameTest2}.  This is the only way to create an INVALID frame by constructing the FrameObj with 4 input fields. 
 
-\begin{figure}[h]
-    \includegraphics[width=0.9\textwidth, left]{FrameTest2.PNG}
+\begin{figure}[ht]
+    \includegraphics[width=0.9\textwidth]{FrameTest2.PNG}
     \caption{Command window output of FrameTest Section 2 showing that all three very wrong frames are INVALID }
     \label{fig:FrameTest2}
 \end{figure}
@@ -178,8 +178,8 @@ str = [str str str]; % str is 84*3 = 252 bits long (over max size)
 %adds 2000 zeros to the end of the bits 'long'
 long= FrameObj(FrameObj.DATAFRAME, FrameObj.IDUE1, FrameObj.IDUE2, str);
 \end{lstlisting} 
-\begin{figure}[h]
-    \includegraphics[width=0.77\textwidth, left]{FrameTest3.PNG}
+\begin{figure}[ht]
+    \includegraphics[width=0.77\textwidth]{FrameTest3.PNG}
     \caption{Command window output of FrameTest Section 3 showing an instances of FrameObj being created from both types of inputs }
     \label{fig:FrameTest3}
 \end{figure}
@@ -208,8 +208,8 @@ DScheck3 = FrameObj(receivedbits3);
 
 To compare the length of the message within data with the length of str as seen in Figure \ref{fig:FrameTest4}, we used DataMessage, Appendix \ref{DataMessage} to convert the bits back into characters.  Figure \ref{fig:FrameTest4} shows that str and the data message are no longer the same length, the result of the limit on the size of the data field. In the following subsections of section 4 the dataSize will be tested at both higher and lower values then corresponds to the data property ised to initialize FrameObj. We do this by creating frakenstein's frames from the header property of one frame and the data property of another with a different dataSize. 
 
-\begin{figure}[!]
-    \includegraphics[width=0.8\textwidth, left]{FrameTest4.PNG}
+\begin{figure}[ht]
+    \includegraphics[width=0.8\textwidth]{FrameTest4.PNG}
     \caption{Command window output of FrameTest Section 4 showing dataSize limits  }
     \label{fig:FrameTest4}
 \end{figure}
