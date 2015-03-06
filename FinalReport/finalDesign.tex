@@ -1,5 +1,10 @@
-This chapter describes the evolution of frame format proposed in \ref{ch:proposal}. Also, it describes the reason
- for each change based on better understanding of the needs of the other teams and the problems in the development.
+This chapter describes the evolution of frame format proposed in \ref{ch:proposal}. Also, it describes the reason for each change based on better understanding the needs of the other teams and the problems in the development. Figure \ref{Interface} is a diagram of our interaction with the other teams that make up this network. 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Interface_diagram.PNG}
+    \caption{Diagram of how Module 6 interfaces with the rest of the network}
+    \label{fig:Interface}
+\end{figure}
 
 
 \section{MAC Frame Construction}
@@ -24,12 +29,11 @@ The figure \ref{fig:stateMachine} is the final state machine used to shows how t
 \section{Transmission and reception process}
 %Rebecca
 
-Developing a frame format for transmission through the cellular network is only one part of the end-to-end requirements of data transmission. There must be a system put in place that transfers the data frame between devices and ensures that it gets to the proper receiver. Once at the receiver there should be a check to ensure that the data was received correctly. The reception of a correctly transmitted data frame should return a control frame, ACK, to the sender.  This allows the sending UE to be certain that the data was received correctly and allows it to resend if the ACK is not received. Just like the data frame, the ACK will have to be properly routed through the network. 
+Developing a frame format for transmission through the cellular network is only one part of the end-to-end requirements of data transmission. There must be a system put in place that transfers the data frame between devices and ensures that it gets to the proper receiver. Once at the receiver there should be a check to ensure that the data was received correctly. The reception of a correctly transmitted data frame should return a control frame, ACK, to the sender.  This allows the sending UE to be certain that the data was received correctly and allows it to resend the data frame if the ACK is not received. Just like the data frame, the ACK will have to be properly routed through the network. 
 
-The network is initialized by Teams 4 and 5 who create a table of the BS to which each UE has connected. Each UE will always transmit to the same BS, so the data frame can be automatically be sent to the initial base station in the appropriate timeslot.  To determine the routing path at the base station we need to compare the receiver ID field with the IDs in the table and identify if the receiver is connected to the initial cell or if the data frame will need to be sent between cells
+\subsection {Routing}
 
-
-
+The network is initialized by Teams 4 and 5 who create a table of the BS to which each UE has connected. Each UE will always transmit to the same BS, so the data frame can be automatically be sent to the initial base station in the appropriate timeslot.  To determine the routing path at the base station we need to compare the receiver ID field with the IDs in the table and identify if the receiver is connected to the initial cell or if the data frame will need to be sent between cells. If it is sent to the second base station, the data frame will undergo the same routing check again before being sent to the device specified by the receiver. The response ACK will follow the reverse path with all of the same checks at the base station(s). The path through the base stations and UEs is depicted in Figure \ref{stateMachine}.
 
 \begin{figure}[ht]
     \centering
@@ -37,6 +41,8 @@ The network is initialized by Teams 4 and 5 who create a table of the BS to whic
     \caption{State Machine of the transmission of a package }
     \label{fig:stateMachine}
 \end{figure}
+
+\subsection {The ACK response }
 
 \begin{figure}[ht]
     \centering
@@ -57,7 +63,7 @@ The network is initialized by Teams 4 and 5 who create a table of the BS to whic
 % so I am going to be describing the state machine essentially....was going to do this but I might go and write the intro frist to have a beter idea of what is going on.
 
 
-\subsection {Routing}
+
 
 \section{Frame Types descriptions}
 %Renato
@@ -88,9 +94,3 @@ The frame type was a easy way to change the behavior of the receiving process ba
 %RGB 253 254 202
 
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.8\textwidth]{Interface_diagram.PNG}
-    \caption{Diagram of how Module 6 interfaces with the rest of the network}
-    \label{fig:Interface}
-\end{figure}
