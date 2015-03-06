@@ -1,11 +1,9 @@
-
-Put your Experimental results
 \section{Testing Frame Construction(FrameObj)}
 %Rebecca
 % not sure how much of this le will go over...  :/
-An easy way of being able to integrate with the other teams seemed to be through the creation of a class, FrameObj, which would not only provide the other modules with a means of creating a frame but a list of properties that could be called for easy debugging. In this object we can also store the values of constants and the ID numbers of devices, statuses, etc.  There are two ways that an instance of the class FrameObj could be constructed,  from the basic requirements of the frame (Frame type, Sender ID number , Receiver ID number, and Data) or from the bits of a frame.
+An easy way of being able to integrate with the other teams seemed to be through the creation of a class, FrameObj, which not only provides the other modules with a means of creating a frame but also provides a list of properties that can be called for easy debugging. In this object we can also store the values of constants and the ID numbers of devices, statuses, etc.  There are two ways that an instance of the class FrameObj can be constructed,  from the basic requirements of the frame (Frame type, Sender ID number , Receiver ID number, and Data) or from the bits of an already constructed frame.
 
-FrameObj was written with a property, Listing \ref{propFrameObj}, for almost every field in the frame format. One notable exception is the data field of the frame. The property data is actually a combination of the data field and the CRC for the data. There are some additional properties as well; header and frameArray are not individual fields, instead they combine the fields of the entire header and frame respectively. The property classUse is not intended to be used outside the of the property data, it signifies which of the two ways of class initialization are used so that the data field can operate differently for either as well as for the different frameTypes.
+FrameObj was written with a property, Listing \ref{propFrameObj}, for almost every field in the frame format. One notable exception is the data field of the frame. The property data is actually a combination of the data field and the CRC for the data, dCRC8. There are some additional properties as well; header and frameArray are not individual fields, instead they combine the fields of the entire header and of the entire frame respectively. The property classUse is not intended to be used outside the of the property data, it signifies which of the two ways of class initialization are used so that the data field can operate differently for either as well as differently for each of the frameTypes.
 \lstset{caption={Variable Properties of FrameObj},label=propFrameObj} 
 \begin{lstlisting} 
     properties
@@ -25,7 +23,7 @@ FrameObj was written with a property, Listing \ref{propFrameObj}, for almost eve
     end
 \end{lstlisting}
 
-While writing FrameObj we also wrote the script FrameTest to test the various configurations under which FrameObj might be used. We tried to account for errors, both through using CRCs to protect our bits and by preparing for the rare errors that could happen and not result in an error with the CRC. FrameTest has been re-ordered in sections to best explain the current configuration of FrameObj and not to reflect the code development of FrameObj. The display statements in FrameTest showing the functionality of FrameObj can be found in Appendix \ref{FrameTestSrc} but are omitted here for clarity.
+While writing FrameObj we also wrote the script FrameTest to test the various configurations and conditions under which FrameObj might be used. We tried to account for errors, both through using a header and data CRC, hCRC8 and dCRC8, to protect our bits and by preparing for the rare errors that may happen and not result in an error with the CRC. FrameTest has been re-ordered in sections to best explain the current configuration of FrameObj and not to reflect the code development of FrameObj. The display statements in FrameTest showing the functionality of FrameObj can be found in Appendix \ref{FrameTestSrc} but are omitted here for clarity.
 
 The first section of FrameTest shows the creation of an ACK frame. An ACK is a frame header with the frametype ACKFRAME. In FrameTest it is created from the frame constants: ACKFRAME, UEID1, and UEID2 with a zero entered instead of data.  
  
@@ -35,7 +33,7 @@ The first section of FrameTest shows the creation of an ACK frame. An ACK is a f
 ACKtype = FrameObj(FrameObj.ACKFRAME, FrameObj.IDUE1, FrameObj.IDUE2, 0);
 \end{lstlisting}
 
-These constant properties correspond to the numbers 255, 101, and 102. Instead of just passing frameType=255 through the FrameObj (as we do with device ID numbers) we use a switch statement to compare the frameType input field to the six frameTypes used in FrameObj. The frameType is the most important property of our frame, it is the first part checked every time a frame is received. If a number is used that is not associated with a frameType it will result in a frame that is INVALID.
+These constant properties correspond to the numbers 255, 101, and 102. Instead of just passing frameType=255 through the FrameObj (as we do with device ID numbers) we use a switch statement to compare the frameType input field to the six frameTypes used in FrameObj. The frameType is the most important property of our frame, it is the first part checked any time a frame is received. If a number is used that is not associated with a frameType it will result in a frame that is INVALID.
 
 \lstset{caption={Function defining the frameType property of FrameObj},label=frameType} 
 \begin{lstlisting} 
@@ -62,7 +60,7 @@ These constant properties correspond to the numbers 255, 101, and 102. Instead o
         end
 \end{lstlisting}
 
-Many of the other FrameObj properties depend on frameType. For instance ACK has no data CRC, as it has no data. For an FrameObj with frameType ACKFRAME, calling the property dCRC8 would result in an error, halting the program. Similarly, calling dCRC8 will result in an error, shown in Listing \ref{dCRC8}, if an unspecified frameType is used. This aids with frame creation. When an undefined frameType is used, errors will be triggered for each property that depends on frameType until that functionality is added. This way we can be sure that we are not using functionality assumed from other frameTypes. 
+Many of the other FrameObj properties depend on frameType. For instance ACK has no dCRC8, as it has no data. For a FrameObj with frameType ACKFRAME, calling the property dCRC8 would result in an error, halting the program. This should alert other the teams that use our frame format to this mistake in the use of FrameObj. Similarly, calling dCRC8 will result in an error, Listing \ref{dCRC8}, if an unspecified frameType is used. This aids with frame creation. When an undefined frameType is used, errors will be triggered for each property that depends on frameType until that functionality is added. This way we can be sure that we are not using functionality assumed from other frameTypes nor are we passing through the frameType dependent functions without adding a value for the FrameObj. 
 
 \lstset{caption={Function defining the dCRC8 property of FrameObj},label=dCRC8} 
 \begin{lstlisting} 
@@ -93,7 +91,7 @@ No matter what type of valid frame is defined in FrameObj it will always have th
     \label{fig:FrameTest1}
 \end{figure}
 
-The INVALID frameType is an important part of protecting the class FrameObj from error filled inputs especially when creating a FrameObj from transceived bits. Critical errors which would cause Matlab errors should result in an INVALID frame instead. In Section 2 of FrameTest, Listing \ref{FrameTest2}, we created three errors that resulted in INVALID frames, the output of this section is shown in Figure \ref{fig:FrameTest2}.
+The INVALID frameType is an important part of protecting the class FrameObj from error filled inputs, especially when creating a FrameObj from transceived bits. Critical bit flips which would cause Matlab errors should result in an INVALID frame instead. In Section 2 of FrameTest, Listing \ref{FrameTest2}, we created three cases of incorrect frames that resulted in INVALID frameTypes, the output of this section is shown in Figure \ref{fig:FrameTest2}.
 
 \lstset{caption={FrameTest Section 2: INVALID},label=FrameTest2} 
 \begin{lstlisting} 
@@ -111,7 +109,7 @@ receivedcbits(2*8+1:3*8) =de2bi(uint8(FrameObj.IDUE3),8,'left-msb');
 wrongcrc = FrameObj(receivedcbits);
 \end{lstlisting} 
 
-The first error, INVALIDtype in Listing \ref{FrameTest2}, is the most straight forward, instead of using a legitimate frametype as the first input to FrameObj, we used an invalid number: 20. This input will be passed to frameType where it will not match any of the defined switch cases in the property frameType from Listing \ref{frameType} and will be set to INVALID through 'otherwise'. The output is shown in Figure\ref{fig:FrameTest2}.  This is the only way to create an INVALID frame by using 4 input fields of FrameObj. 
+The first incorrect initialization of FrameObj, INVALIDtype in Listing \ref{FrameTest2}, is the most straight forward, instead of using a legitimate frametype as the first input to FrameObj, we used an invalid number: 20. This input will be passed to frameType where it will not match any of the defined switch cases in the property frameType, Listing \ref{frameType}, and will be set to INVALID through 'otherwise'. This output is shown in Figure\ref{fig:FrameTest2}.  This is the only way to create an INVALID frame by constructing the FrameObj with 4 input fields. 
 
 \begin{figure}[h]
     \includegraphics[width=0.9\textwidth, left]{FrameTest2.PNG}
@@ -119,7 +117,7 @@ The first error, INVALIDtype in Listing \ref{FrameTest2}, is the most straight f
     \label{fig:FrameTest2}
 \end{figure}
 
-The next two types of errors that result in INVALID frames are checked for in the FrameObj constructor, Listing \ref{FrameObj1} when the input is in bits. The first of these errors stems from the minimum size of a frame and therefore from the minimum acceptable length of the n*1 input. The array used in FrameObj, receivedshort from Listing \ref{FrameTest2},  must be at least 40 bits long to represent a valid frame. By defaulting all shorter inputs to INVALID we can be certain that we will not be indexing outside of the dimensions of the input. Figure \ref{fig:FrameTest2} shows that when the input has a length of only 39 bits the resulting frameType will be INVALID. 
+The next two types of incorrect information that result in INVALID frames are checked for when the input is in bits in the FrameObj constructor, Listing \ref{FrameObj1}. The first of these stems from the minimum size of a frame and therefore from the minimum acceptable length of the n*1 input. The array used in FrameObj, receivedshort from Listing \ref{FrameTest2},  must be at least 40 bits long to represent a valid frame. By defaulting all shorter inputs to INVALID we can be certain that we will not be indexing outside of the dimensions of the input. Figure \ref{fig:FrameTest2} shows that when the input has a length of only 39 bits the resulting frameType will be INVALID. 
 
 \lstset{caption={Single bit array input constructor of FrameObj},label=FrameObj1} 
 \begin{lstlisting} 
@@ -150,9 +148,9 @@ The next two types of errors that result in INVALID frames are checked for in th
             end
 \end{lstlisting} 
 
-The code from the FrameObj constructor in Listing \ref{FrameObj1}, shows the source of the last error that will result in an INVALID frame. After checking for the minimum size of the input, the constructor will check the CRC of the header. In FrameTest, Listing \ref{FrameTest2} we guarantee that the header will cause a CRC error by replacing the sndID number with another UEID number in the bit array receivedcbits. An error with the header CRC is not necessarily critical for the FrameObj construction but it is important for the functionality of the frame format in the network.
+The code from the FrameObj constructor in Listing \ref{FrameObj1}, shows the source of the last configuration of incorrect bits that will result in an INVALID frame. After checking for the minimum size of the input, the constructor will check the CRC of the header. In FrameTest, Listing \ref{FrameTest2} we guarantee that the header will cause an incorrect hCRC8 by replacing the sndID number with another UEID number in the bit array receivedcbits. An error with the hCRC8 is not necessarily critical for the FrameObj construction but it is important for the functionality of the frame format in the network.
 
-The data field of the frame format is the most complicated property to implement in FrameObj. Not only does it change dramatically with frameType but the way it functions changes with the way that FrameObj is used, with either 1 or 4 inputs. For an ACKFRAME frameType the data property must be initialized as a value or there will be an error but data should not be used. For a DATAFRAME frameType, data must either take in a string or an array of bits. Other frameTypes will have different requirements which means that very little processing can be done in the constructor of the FrameObj, the bulk of data must be defined in the property function. 
+The data field of the frame format is the most complicated property to implement in FrameObj. Not only does it change dramatically with frameType but the way it functions changes with the way that FrameObj is used, with either 1 or 4 inputs. For an ACKFRAME frameType the data property must be initialized as a value or there will be an error, but data should still not be used. For a DATAFRAME frameType, the data property must either take in a string or an array of bits. Other frameTypes will have different requirements which means that very little processing can be done in the constructor of the FrameObj, the bulk of data must be defined in the property function. 
 
 \lstset{caption={FrameTest Section 3: DATA },label=FrameTest3} 
 \begin{lstlisting} 
@@ -170,7 +168,7 @@ receivedfrombits = [fromconst.frameArray; zeros(2000, 1)];
 frombits = FrameObj(receivedfrombits);
 \end{lstlisting} 
 
-Section 3 of TestFrame, Listing \ref{TestFrame3}, tests the many aspects of the data creation of FrameObj as well as the dataSize. It does that by first properly creating the FrameObj fromconst and using the frameArray property to create the array of bits. With or without zero padding at the end, receivedfrombits can be used to create a FrameObj identical to fromconst in every way. Figure \ref{fig:FrameTest3} shows that every property of fromconst matches the corresponding property in frombits. The data property is only able to be found from the bitwise input when the dataSize is accurate.   
+Section 3 of TestFrame, Listing \ref{TestFrame3}, tests the many aspects of the data creation of FrameObj as well as the dataSize. It does that by first properly creating the FrameObj fromconst and using the frameArray property to create the array of bits. With or without zero padding at the end, receivedfrombits can be used to create a FrameObj identical to fromconst in every way. Figure \ref{fig:FrameTest3} shows that every property of fromconst matches the corresponding property in frombits. The data property and as a result the dCRC8 is only able to be found from the bitwise input when dataSize is accurate.   
 
 \lstset{caption={FrameTest Section 3: DATA },label=FrameTest3} 
 \begin{lstlisting} 
@@ -186,7 +184,7 @@ long= FrameObj(FrameObj.DATAFRAME, FrameObj.IDUE1, FrameObj.IDUE2, str);
     \label{fig:FrameTest3}
 \end{figure}
 
-The length the data field in all frameTypes is limited to a maximum of 234 bytes. Section 4 of FrameTest shows how errors in dataSize would be prevented from being greater than input dimensions. This will prevent Matlab errors but will not significantly increase the likelihood of the data being correct. In Listing \ref{FrameTest4.1} the size of the data input 'str' is increased from 84 bits long in Listing \ref{FrameTest3} to 252 bits. The data property should cut off 12 bits before adding on the CRC.
+The length the data field in all frameTypes is limited to a maximum of 234 bytes (MAXDATA). Section 4 of FrameTest shows how errors in dataSize would be prevented from being greater than input dimensions. This will prevent Matlab errors but will not significantly increase the likelihood of the data being correct. In Listing \ref{FrameTest4.1} the size of the data input 'str' is increased from 84 bits in Listing \ref{FrameTest3} to 252 bits. The data property should cut off 18 bits before creating and appending the dCRC8.
 
 \lstset{caption={FrameTest Section 4: DataSize },label=FrameTest4} 
 \begin{lstlisting} 
@@ -208,7 +206,7 @@ receivedbits3 = [fromconst.header; long.data];
 DScheck3 = FrameObj(receivedbits3);
 \end{lstlisting} 
 
-To compare the length of the message within data with the length of str as seen in Figure \ref{fig:FrameTest4}, we used DataMessage, Appendix \ref{DataMessage} to convert the bits back into characters.  Figure \ref{fig:FrameTest4} shows that str and the data message are no longer the same length as a result of the limit on the size of the data field. In the following subsections of section 4 the dataSize will be tested at both higher and lower values then corresponds to the data property passed to the FrameObj. We do this by creating frakenstein's frames from the header of one frame and the data of another. 
+To compare the length of the message within data with the length of str as seen in Figure \ref{fig:FrameTest4}, we used DataMessage, Appendix \ref{DataMessage} to convert the bits back into characters.  Figure \ref{fig:FrameTest4} shows that str and the data message are no longer the same length, the result of the limit on the size of the data field. In the following subsections of section 4 the dataSize will be tested at both higher and lower values then corresponds to the data property ised to initialize FrameObj. We do this by creating frakenstein's frames from the header property of one frame and the data property of another with a different dataSize. 
 
 \begin{figure}[!]
     \includegraphics[width=0.8\textwidth, left]{FrameTest4.PNG}
@@ -216,7 +214,11 @@ To compare the length of the message within data with the length of str as seen 
     \label{fig:FrameTest4}
 \end{figure}
 
-The subsections 2 and 3 of Listing \ref{FrameTest4} uses the same header and data properties to create the new FrameObjs DScheck1 and DScheck2. Both use data sizes longer than the message in the data property. The difference is that DScheck2 contains one additional zero at the beginning. This single bit of zero padding is the difference between data with a dCRC8 in DScheck1 which will check out without error and the dCRC8 in DScheck2 which does not match the original.  
+The subsections 2 and 3 of Listing \ref{FrameTest4} uses the same header and data properties to create the new FrameObjs DScheck1 and DScheck2. Both use dataSizes the same amount longer than the message in the data property. DScheck2 contains an additional bit of padding at the end. This single bit of zero padding is the difference between the data property with a dCRC8 in DScheck1 which matches the correct dCRC8 in fromconst and the dCRC8 in DScheck2 which does not match the original. Tranceiving frames should only result in received frames the exact length of the transmitted frames when the frame size is at the maximum.
+
+When the dataSize is smaller than the amount of data transmitted, the dCRC8 will only match the original through coincidence. A small datasize will cut-off the data property before the dCRC8, completely eliminating the field as shown in Figure \ref{fig:FrameTest4}. The dCRC8 property of FrameObj is very dumb, it always takes the last byte of data without knowing if it is correct. A too small dataSize will result in a byte of the message being removed from the message and interpreted as the dCRC8. 
+
+A change in the dataSize that goes unnoticed by the hCRC8 will not result in an INVALID frameType. It will most likely result in a failed dCRC8 check. More importantly this kind of bit flip will not result in a Matlab error which would prevent the program from continuing to run. 
 
 \section{End-to-End Local Machine Testing }
 %Renato
