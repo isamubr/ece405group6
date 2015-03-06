@@ -63,10 +63,20 @@ It procedure is important because it need to be done in the integration with oth
 \section{Transmitting and receiving over the air}
 %Renato
 The frame object need to be tested over the air to check if it behaves as expected in our simulation. 
-It was tested using two diffetne physical layer. 
+It was tested using two different physical layer. 
 \subsection{Using lab2 physical layer}
 The first test was using a very straight forward approach. We just replaced the 'hello world' message in the Lab 2 
-simulating model to add the frame object with a message 'Hi', so it can near the orginal size of the message.
+simulating model to add the frame object with a message 'Hi', so it can send a frame near the original size.
+The code to create frame is shown in \ref{transLab02}. It is used as input of simulation in diagram of figure \ref{fig:trasmitter_lab02}
+
+\lstset{caption={Code to create the transmitter package to used in Lab 02 physical layer},label=transLab02}
+\lstinputlisting{code/crcVerification.M}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{trasmitter_lab02.PNG}
+    \caption{Simulink diagram of the transmitter of the laboratory two physical layer modificed to received a input frmaobje wit the message 'Hi' }
+    \label{fig:trasmitter_lab02}
+\end{figure}
 
 \begin{table}[ht]
 	\centering
