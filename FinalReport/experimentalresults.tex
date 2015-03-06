@@ -15,14 +15,11 @@ section 1 tests the ways we can make an invalid frame
 
 
 
-\section{Transmitting and receiving over the air}
-%Renato
-\subsection{Using lab2 physical layer}
-\subsection{Using Team 4 physical layer}
+
 \section{End-to-End Local Machine Testing }
 %Renato
 The test of the implementation of the end to end communication.
-Based on proposal of final desing project \cite{cdproj}, there
+Based on proposal of final design project \cite{cdproj}, there
 are six case to be tested in the end to end communication
 \begin{enumerate}
   \item Extra-cellular communications between UEs
@@ -39,9 +36,39 @@ are six case to be tested in the end to end communication
 	\end{enumerate}
 \end{enumerate}
 
-The 
+The figure \ref{fig:endendDiagram} show how the whole MATLAB code is organized to test all the cased described in this section.
+The send and received part maps each path of information lie UE 1 to BS1 as a channel . It more logical representation that to a physical channel to the end
+to end implementation in the final integration.
+The routing used was just a siwtch case based on picture of proposed network in \cite{cdproj}.
+The send and received is a recursive function that call it self based with parameters changed for the routing.
+One examples is shown in listing \ref{sendReceiveExample} show how inside a channel based on direction how it will resend the message or exit the the function based on the destination.
+\lstset{caption={Code examples how to verify the CRC and create the ACK message back to sender},label=sendReceiveExample}
+\lstinputlisting{code/sendReceiveExample.M}
 
-\begin{table}
+The listing \ref{crcVerification} is a examples how the receveive UE in the figure \ref{fig:endendDiagram} verify the CRC and create the new frame to send back.
+It procedure is important because it need to be done in the integration with other team that need to use the frameObj.     
+
+\lstset{caption={Code examples how to verify the CRC and create the ACK message back to sender},label=crcVerification}
+\lstinputlisting{code/crcVerification.M}
+
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{flowEndtoEnd.PNG}
+    \caption{Diagram of the flow of information to test the end to end in Matlab for the team 6 proposed protocol}
+    \label{fig:endendDiagram}
+\end{figure} 
+
+\section{Transmitting and receiving over the air}
+%Renato
+The frame object need to be tested over the air to check if it behaves as expected in our simulation. 
+It was tested using two diffetne physical layer. 
+\subsection{Using lab2 physical layer}
+The first test was using a very straight forward approach. We just replaced the 'hello world' message in the Lab 2 
+simulating model to add the frame object with a message 'Hi', so it can near the orginal size of the message.
+
+\begin{table}[ht]
 	\centering
 		\begin{tabular}{| c | c | }
 		\hline                       
@@ -58,7 +85,7 @@ The
 	\label{tab:2ACK}
 \end{table}
 
-\begin{table}
+\begin{table}[ht]
 	\centering
 		\begin{tabular}{| c | c | }
 		\hline                       
@@ -74,3 +101,6 @@ The
 	\caption{Table of frames received with poor transmission quality and a larger hamming distance between frame types}
 	\label{tab:0ACK}
 \end{table}
+
+\subsection{Using Team 4 physical layer}
+
