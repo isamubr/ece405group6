@@ -1,21 +1,22 @@
 classdef FrameObj
     %FRAMEOBJ has 2 input configuraions; 4 inputs mean you are using the
     %frame requirements to create a FrameObj, 1 input means you are using
-    %the bits
+    %the bits. Not all frameTypes have all properties 
     %   In the first configuration (4 inputs) the first 3 inputs must be
     %   numbers and it is recommended that the constant properties of
     %   FrameObj are used to ensure accuracy. The last input depends on the
     %   frameType.
-    %    -DATAFRAME: the last input must be a string and only the first 234 
+    %    -DATAFRAME: The last input must be a string and only the first 234 
     %       characters will be included.
-    %    -ACKFRAME: the last input does not matter but must exist.
-    %    -POLLFRAME 
-    %    -REQFRAME 
-    %    -TABLEFRAME
+    %    -POLLFRAME: The last input is a decimal number representing the
+    %       time
+    %    -TABLEFRAME: The last input is the address table in the form of a
+    %       string. It should always be smaller than 234 characters
+    %    -ACKFRAME: The last input does not matter but must exist.
+    %    -REQFRAME: The last input does not matter but must exist.
     %   In the second configuration (1 input) the input must be a binary
-    %   nx1 array with a supported frame type in the first byte. To ensure
-    %   that there is no indexing outside the dimensions of the input array
-    %   it is best if all inputs have a size of 1920x1
+    %   nx1 array with a supported frame type in the first byte. This array
+    %   must have over 40 bits or it will default to an INVALID frameType
     
     
     properties (Constant)
@@ -33,7 +34,7 @@ classdef FrameObj
         DATAFRAME = 240;    %1111 0000
         ACKFRAME  = 255;    %1111 1111
         POLLFRAME = 202;    %1100 1010
-        REQFRAME  =  83;    %0101 0011
+        REQFRAME   = 83;    %0101 0011
         TABLEFRAME = 15;    %0000 1111
         INVALID = 0;        %0000 0000   
         
@@ -46,14 +47,14 @@ classdef FrameObj
         CHBS1BS2 = 3;
         CHUE3BS2 = 4;
   
+        %statuses
         CRCOK = 1;
         CRCFAIL = 2;
-        
         ACKRECEIVED = 3;
         TIMEOUT = 4;
 
-        MAXDATA = 234; % Probably the only constant that has meaning
-        MAXBYTES = 240; 
+        MAXDATA = 234; 
+        MAXBYTES = 240;         
     end
     
     properties
@@ -99,7 +100,6 @@ classdef FrameObj
                 if (size_in >= 40)
                     % hCRC check
                     
-                    % needed for the crc calculation
                     hDetect = comm.CRCDetector([8 7 6 4 2 0]);
                     % detects if there is an error in the CRC of the header
                     [~, err] = step(hDetect, bitwise(1:5*8,1));
@@ -152,17 +152,19 @@ classdef FrameObj
             %Using the switch statement in this way ensures that a
             %supported data type is used
             switch inputframeType
-                case FrameObj.DATAFRAME %DATA
+                case FrameObj.DATAFRAME     %DATA
                     obj.frameType = uint8(inputframeType);
-                case FrameObj.ACKFRAME  %ACK
+                case FrameObj.ACKFRAME      %ACK
                     obj.frameType = uint8(inputframeType);
-                case FrameObj.POLLFRAME %POLL
+                case FrameObj.POLLFRAME     %POLL
                     obj.frameType = uint8(inputframeType);
-                case FrameObj.REQFRAME  %REQ
+                case FrameObj.REQFRAME      %REQ
                     obj.frameType = uint8(inputframeType);
-                case FrameObj.INVALID   %INVALID
+                case FrameObj.TABLEFRAME    %TABLE
                     obj.frameType = uint8(inputframeType);
-                otherwise % also INVALID
+                case FrameObj.INVALID       %INVALID
+                    obj.frameType = uint8(inputframeType);
+                otherwise             % also INVALID
                     obj.frameType = uint8(FrameObj.INVALID);
             end
         end
@@ -188,7 +190,95 @@ classdef FrameObj
             header_bits = (FrameObj.MAXBYTES-(FrameObj.MAXDATA+1))*8;
             max_data_bits = FrameObj.MAXDATA*8;
             switch obj.frameType
-                case FrameObj.DATAFRAME %DATA
+                case FrameObj.DATAFRAME     %DATA
+                    if obj.classUse == FrameObj.ENCODE;
+                        %This converts the datainput into an array of bits
+                        temp_bin = reshape(dec2bin(datainput,8)',1,[]);
+                        
+                        %Define the length of temp_data for speed
+                        % the length of temp_data is limited by MAXBYTES
+                        if size(temp_bin,2)>= max_data_bits
+                            temp_data = zeros(1,max_data_bits); 
+                        else
+                            temp_data = zeros(1,size(temp_bin,2));
+                        end
+                        
+                        for j=1:size(temp_data,2)
+                            temp_data(1,j) = str2num(temp_bin(1,j));
+                        end
+                        
+                        crcGen = comm.CRCGenerator([8 7 6 4 2 0]);
+                        
+                        %Calculates the CRC and adds it to the end of data
+                        obj.data =  step(crcGen, temp_data');
+                        
+                    elseif obj.classUse == FrameObj.DECODE;
+                        %This seperates the data from the rest of the array
+                        %using dataSize.
+                        
+                        %First seperate dataSize then convert to decimal
+                        %Cast to double and convert from bytes to bits
+                        Temp =  bi2de(datainput(1+3*8:4*8,1)','left-msb');
+                        ds = double(Temp*8);       
+                        
+                        %This allows FrameObj to not exceed the dimensions
+                        %of inputdata in case the dataSize was corrupted to
+                        %be or larger than the length of the input array
+                        %and passed the hCRC.
+                        data_bits = size(datainput, 1)-header_bits -8;
+                        if ds >= data_bits
+                            ds = data_bits;
+                        end
+                        % or larger than MAXDATA
+                        if ds >= max_data_bits
+                            ds = max_data_bits;
+                        end
+                        
+                        %Seperate data using the start of the data and the
+                        %length+crc
+                        bits = datainput(header_bits+1:header_bits+ds+8,1);
+                        %cast to double
+                        obj.data = double(bits);
+                    end
+                case FrameObj.ACKFRAME      %ACK
+                    obj.data = ''; %could be anything
+                    %if there is no data you should not try to access the
+                    %ACK data but data is always assesed regardless of the
+                    %frameType
+                case FrameObj.POLLFRAME     %POLL
+                    if obj.classUse == FrameObj.ENCODE;
+                        obj.data = de2bi(datainput)';
+                    elseif obj.classUse == FrameObj.DECODE;
+                        % This seperates the data from the rest of the
+                        % array using dataSize.
+                        
+                        %First seperate dataSize then convert to decimal
+                        ds =  bi2de(datainput(1+3*8:4*8,1)','left-msb');
+                               
+                        %This allows FrameObj to not exceed the dimensions
+                        %of inputdata in case the dataSize was corrupted to
+                        %be or larger than the length of the input array
+                        %and passed the hCRC.
+                        data_bits = size(datainput, 1)-header_bits;
+                        if ds >= data_bits
+                            ds = data_bits;
+                        end
+                        % or larger than MAXDATA
+                        if ds >= max_data_bits
+                            ds = max_data_bits;
+                        end
+                        
+                        %Seperate data using the start of the data and the
+                        %length
+                        bits = datainput(header_bits+1:header_bits+ds,1);
+                        %cast to double
+                        obj.data = double(bits);
+                    end
+                case FrameObj.REQFRAME      %REQ
+                    obj.data = ''; %work on this.
+                %Do we need this?  Currently no data to be passed besides
+                %rcvID and sendID.
+                case FrameObj.TABLEFRAME    %TABLE
                     if obj.classUse == FrameObj.ENCODE;
                         %This converts the datainput into an array of bits
                         temp_bin = reshape(dec2bin(datainput,8)',1,[]);
@@ -206,12 +296,10 @@ classdef FrameObj
                         end
                         
                         crcGen = comm.CRCGenerator([8 7 6 4 2 0]);
-                        
                         %Calculates the CRC and adds it to the end of data
                         obj.data =  step(crcGen, temp_data');
                         
                     elseif obj.classUse == FrameObj.DECODE;
-                        data_bits = size(datainput, 1)-header_bits -8;
                         %This seperates the data from the rest of the array
                         %using dataSize.
                         
@@ -224,12 +312,13 @@ classdef FrameObj
                         %of inputdata in case the dataSize was corrupted to
                         %be or larger than the length of the input array
                         %and passed the hCRC.
+                        data_bits = size(datainput, 1)-header_bits -8;
                         if ds >= data_bits
-                            ds = data_bits
+                            ds = data_bits;
                         end
                         % or larger than MAXDATA
                         if ds >= max_data_bits
-                            ds = max_data_bits
+                            ds = max_data_bits;
                         end
                         
                         %Seperate data using the start of the data and the
@@ -238,19 +327,6 @@ classdef FrameObj
                         %cast to double
                         obj.data = double(bits);
                     end
-                case FrameObj.ACKFRAME %ACK
-                    obj.data = ''; %could be anything
-                    %if there is no data you should not try to access tha
-                    %ACK data but data is always assesed regardless of the
-                    %frameType
-                case FrameObj.POLLFRAME %POLL
-                    obj.data = bi2de(datainput);%work on this
-                        %is there anything we don't want converted here?
-                        %unsure
-                case FrameObj.REQFRAME %REQ
-                    obj.data = bi2de(); %work on this.
-                %Do we need this?  Currently no data to be passed besides
-                %recID and sendID.
                 case FrameObj.INVALID   %INVALID
                     obj.data = ''; %could be anything
                     %if there is no valid frameType you should not try to
@@ -271,15 +347,29 @@ classdef FrameObj
 %dataSize
         % frameType dependent
         % returns 0 if ACK
+        % returns 0 if REQ
+        % In bits for POLL
+        % In bytes for DATA
+        % In bytes for TABLE
         function value = get.dataSize(obj)
             switch obj.frameType
-                case FrameObj.DATAFRAME %DATA
+                case FrameObj.DATAFRAME     %DATA
                     %Convert from bits to bytes and subtract 1 to account
                     %for the CRC
                     value = (length(obj.data)/8)-1;
-                case FrameObj.ACKFRAME  %ACK
+                case FrameObj.ACKFRAME      %ACK
                     value = 0;
                     %the ACKFRAME has no data but it must have a dataSize
+                case FrameObj.POLLFRAME     %POLL
+                    % Just the length of the data in bits
+                    value = length(obj.data);
+                case FrameObj.REQFRAME      %REQ
+                    % Just the length of the data in bits
+                    value = 0;
+                case FrameObj.TABLEFRAME    %TABLE
+                    %Convert from bits to bytes and subtract 1 to account
+                    %for the CRC
+                    value = (length(obj.data)/8)-1;
                 otherwise
                     error('Not a supported frame type for dataSize')
                     % If this error occurs while using a legitimate frame
@@ -296,17 +386,23 @@ classdef FrameObj
         %frameType dependent
         function value = get.dCRC8(obj)
             switch obj.frameType
-                case FrameObj.DATAFRAME %DATA
+                case FrameObj.DATAFRAME     %DATA
                     %The last byte of obj.data is the CRC. It is seperated
                     %from the data here
-                    [m, ~] = size(obj.data);
-                    value =zeros(8,1);      %Define value for speed
-                    for j=1:8
-                        value(j,1) = obj.data(m-8+j,1);
-                    end
-                case FrameObj.ACKFRAME %ACK
+                    value = obj.data(end-8:end,1);
+                case FrameObj.ACKFRAME      %ACK
                     error('This is an ACK, it has no data therefor no CRC')
                     %If there is no data there should be no check
+                case FrameObj.POLLFRAME     %POLL
+                    error('This is a Polling frame, it has no data CRC')
+                    %If there is no data there should be no check
+                case FrameObj.REQFRAME      %REQ
+                    error('This is a REQ, it has no data therefor no CRC')
+                    %If there is no data there should be no check
+                case FrameObj.TABLEFRAME    %TABLE
+                    %The last byte of obj.data is the CRC. It is seperated
+                    %from the data here
+                    value = obj.data(end-8:end,1);
                 otherwise
                     error('Not a supported frame type for CRC8')
                     % If this error occurs while using a legitimate frame
@@ -329,7 +425,7 @@ classdef FrameObj
             size_array  = de2bi(obj.dataSize,8,'left-msb');
             
             temp_header = [type_array rcvid_array sndid_array size_array];
-            
+
             crcGen = comm.CRCGenerator([8 7 6 4 2 0]);
             %Calculates the CRC and adds it to the end of header
             value =  step(crcGen, logical(temp_header'));
@@ -338,28 +434,33 @@ classdef FrameObj
 %hCRC8
         function value = get.hCRC8(obj)
             % The last byte of obj.header is the hCRC 
-            [m, ~] = size(obj.header);
-            value =zeros(8,1);      %Define value for speed
-            for j=1:8
-                value(j,1) = obj.header(m-8+j,1);
-            end
+            value = obj.header(end-8:end,1);
         end
         
 %frameArray
         %frameType dependent
+        
         %ACKFRAME --> frametype, sndID, rcvID, dataSize, hCRC8
+        %REQFRAME --> frametype, sndID, rcvID, dataSize, hCRC8
+        %POLLFRAME--> frametype, sndID, rcvID, dataSize, hCRC8, data
         %DATAFRAME--> frametype, sndID, rcvID, dataSize, hCRC8, data, dCRC8
+        %TABLEFRAME-> frametype, sndID, rcvID, dataSize, hCRC8, data, dCRC8
+        
         % If we want to fill the end with zeros that could easily be done
         function value = get.frameArray(obj)
             % for data we combine the data and header in a n*1 binary array
             % the ack is only a header.
-            % both header and data have a crc8 included
-
             switch obj.frameType
-                case obj.DATAFRAME
+                case obj.DATAFRAME      %DATA
                     value = [obj.header; obj.data];
-                case obj.ACKFRAME
+                case obj.ACKFRAME       %ACK
                     value = [obj.header];
+                case obj.POLLFRAME      %POLL
+                    value = [obj.header; obj.data];
+                case obj.REQFRAME       %REQ
+                    value = [obj.header];
+                case obj.TABLEFRAME     %TABLE
+                    value = [obj.header; obj.data];
                 otherwise
                     error('Not a supported frame type for frameArray')
                     % If this error occurs while using a legitimate frame
