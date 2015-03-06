@@ -4,25 +4,11 @@ clc
 import FrameObj
 
 %% Section 1:
-disp('Section 1: Test INVALID frameType')
-%create the instance of FrameObj 'correct'
-%adds 2000 zeros to the end of the bits 'correct'
-%change the sender to IDUE3
-correct= FrameObj(FrameObj.ACKFRAME, FrameObj.IDUE1, FrameObj.IDUE2, 0);
-receivedcbits = [correct.frameArray; zeros(2000, 1)];
-receivedcbits(2*8+1:3*8) = FrameObj.IDUE3;
-wrong = FrameObj(receivedcbits);
+disp('Section 1: Test ACKFRAME frameType')
+%createACK
+ACKtype = FrameObj(FrameObj.ACKFRAME,FrameObj.IDUE1,FrameObj.IDUE2, 0);
 
-%nonsense frameType
-INVALIDtype = FrameObj(20 , FrameObj.IDUE1, FrameObj.IDUE2, 0);
-
-% cut off the number of bits
-receivedshort = receivedcbits(1:39);
-shorttype = FrameObj(receivedshort);
-
-disp('   What type of frame will "wrong" be?')
-    %should be INVALID
-switch wrong.frameType
+switch  ACKtype.frameType
     case FrameObj.INVALID
         disp('    -INVALID')
     case FrameObj.DATAFRAME
@@ -36,9 +22,46 @@ switch wrong.frameType
     case FrameObj.TABLEFRAME
         disp('    -TABLEFRAME')
 end
+disp(['   The size of "ACKtype": ' num2str(length(ACKtype.frameArray))])
+    %should be 40
+disp(['   The size of the data in "ACKtype": ' num2str(ACKtype.dataSize)])
+    %should be 0
+%ACKtype.dCRC;
+%% Section 2:
+disp([10 'Section 2: Test INVALID frameType'])
+%nonsense frameType
+INVALIDtype = FrameObj(20 , FrameObj.IDUE1, FrameObj.IDUE2, 0);
+%IVALIDtype.dataSize;
+
+% cut off the number of bits
+receivedshort = ACKtype.frameArray(1:39);
+shorttype = FrameObj(receivedshort);
+
+%adds 2000 zeros to the end of the bits 'correct'
+%change the sender to IDUE3
+receivedcbits = [ACKtype.frameArray; zeros(2000, 1)];
+receivedcbits(2*8+1:3*8) =de2bi(uint8(FrameObj.IDUE3),8,'left-msb');
+wrongcrc = FrameObj(receivedcbits);
+
 disp('   What type of frame will "INVALIDtype" be?')
     %should be INVALID
 switch  INVALIDtype.frameType
+    case FrameObj.INVALID
+        disp('    -INVALID')
+    case FrameObj.DATAFRAME
+        disp('    -DATAFRAME')
+    case FrameObj.REQFRAME
+        disp('    -REQFRAME')
+    case FrameObj.ACKFRAME
+        disp('    -ACKFRAME')
+    case FrameObj.POLLFRAME
+        disp('    -POLLFRAME')
+    case FrameObj.TABLEFRAME
+        disp('    -TABLEFRAME')
+end
+disp('   What type of frame will "wrongcrc" be?')
+    %should be INVALID
+switch wrongcrc.frameType
     case FrameObj.INVALID
         disp('    -INVALID')
     case FrameObj.DATAFRAME
@@ -68,29 +91,6 @@ switch  shorttype.frameType
     case FrameObj.TABLEFRAME
         disp('    -TABLEFRAME')
 end
-%% Section 2:
-disp([10 'Section 2: Test ACKFRAME frameType'])
-%createACK
-ACKtype = FrameObj(FrameObj.ACKFRAME,FrameObj.IDUE1,FrameObj.IDUE2, 0);
-
-switch  ACKtype.frameType
-    case FrameObj.INVALID
-        disp('    -INVALID')
-    case FrameObj.DATAFRAME
-        disp('    -DATAFRAME')
-    case FrameObj.REQFRAME
-        disp('    -REQFRAME')
-    case FrameObj.ACKFRAME
-        disp('    -ACKFRAME')
-    case FrameObj.POLLFRAME
-        disp('    -POLLFRAME')
-    case FrameObj.TABLEFRAME
-        disp('    -TABLEFRAME')
-end
-disp(['   The size of "ACKtype": ' num2str(length(ACKtype.frameArray))])
-    %should be 40
-disp(['   The size of the data in "ACKtype": ' num2str(ACKtype.dataSize)])
-    %should be 0
 %% Section 3:
 disp([10 'Section 3: Compare both methods of frame creation for DATA'])
 str = [' abcdefghijklmnopqrstuvwxyz' char(10)];
